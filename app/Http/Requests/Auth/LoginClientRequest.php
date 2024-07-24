@@ -11,6 +11,9 @@ use Illuminate\Validation\ValidationException;
 use App\Models\Client;
 use Illuminate\Support\Facades\Hash;
 
+
+use App\Notifications\Code;
+
 class LoginClientRequest extends FormRequest
 {
 
@@ -54,8 +57,17 @@ class LoginClientRequest extends FormRequest
                     //    'email' => __('messages.auth.fail') ,
                     ]);
                 }
-         
+                
+
+                // insert code in data
+                $client = Client::where('email', $this->input('email'))->first();
+                $client->generateCode();          // from Client model
    
+
+                // send mail
+                $client->notify(new Code());
+
+
         RateLimiter::clear($this->throttleKey());
     }
 

@@ -30,6 +30,12 @@ use App\Http\Controllers\Web\ClientPasswordResetController;
 //site
 use App\Http\Controllers\HomeController;
 
+
+use App\Http\Controllers\CodeController;
+
+
+use Illuminate\Support\Facades\Artisan;
+
 //use Illuminate\Support\Facades\Facade\Artisan;
 /*
 |--------------------------------------------------------------------------
@@ -41,6 +47,11 @@ use App\Http\Controllers\HomeController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::resource('verify', CodeController::class);
+
+
 Route::get('/error500', [HomeController::class, 'error500'])->name('error500');
 Route::get('/', [HomeController::class, 'index'])->name('site.home');
 Route::get('/clear', function () {
@@ -130,7 +141,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
             Route::post('/question/{id}', [SettingController::class, 'quesupdate']);
         });
         //questions
-//category
+        //category
         Route::resource('categoryques', CategoryQuesController::class, ['except' => ['update']]);
         Route::prefix('categoryques')->group(function () {
             Route::post('/update/{id}', [CategoryQuesController::class, 'update'])->name('categoryques.update');
@@ -235,44 +246,51 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
 //site 
 //password
 
-Route::get('u/password/reset', [ClientPasswordResetController::class, 'showLinkRequestForm'])->name('client.password.request');
-Route::post('u/password/email', [ClientPasswordResetController::class, 'sendResetLinkEmail'])->name('client.password.email');
-Route::get('u/password/reset/{token}', [ClientPasswordResetController::class, 'showResetForm'])->name('client.password.reset');
-Route::post('u/password/reset', [ClientPasswordResetController::class, 'reset'])->name('client.password.update');
+    Route::get('u/password/reset', [ClientPasswordResetController::class, 'showLinkRequestForm'])->name('client.password.request');
+    Route::post('u/password/email', [ClientPasswordResetController::class, 'sendResetLinkEmail'])->name('client.password.email');
+    Route::get('u/password/reset/{token}', [ClientPasswordResetController::class, 'showResetForm'])->name('client.password.reset');
+    Route::post('u/password/reset', [ClientPasswordResetController::class, 'reset'])->name('client.password.update');
 
-//
-Route::get('{lang}/page/{slug}', [HomeController::class, 'showpage']);
-Route::get('{lang}/categories', [HomeController::class, 'getcategories']);
-Route::prefix('{lang}')->group(function () {
-    Route::get('/home', [HomeController::class, 'index']);
-    Route::get('/scores', [ClientController::class, 'scores']);
-    //Route::get('/{slug}', [ClientController::class, 'send_message']);
-    Route::middleware('guest:client')->group(function () {
-        Route::get('/register', [ClientController::class, 'create'])->name('register.client');
-        Route::post('/register', [ClientController::class, 'store']);
-
-        Route::get('/login', [ClientController::class, 'showlogin'])->name('login.client');
-        Route::post('/login', [ClientController::class, 'login']);
-    });
-});
-Route::middleware(['auth:client', 'verified'])->group(function () {
-    Route::post('u/logout', [ClientController::class, 'logout'])->name('logout.client');
-    //account
-    Route::post('u/delete', [ClientController::class, 'destroy']);
-    Route::get('/balanceinfo', [ClientController::class, 'balanceinfo']);
+    //
+    Route::get('{lang}/page/{slug}', [HomeController::class, 'showpage']);
+    Route::get('{lang}/categories', [HomeController::class, 'getcategories']);
 
     Route::prefix('{lang}')->group(function () {
-        //account
-        Route::post('/updatepass', [ClientController::class, 'updatepass'])->name('client.updatepass');
-        Route::get('/account', [ClientController::class, 'edit'])->name('client.account');
-        Route::post('/update', [ClientController::class, 'update'])->name('client.update');
-        Route::post('/pull', [ClientController::class, 'pull']);
-        //my score
-        Route::get('/myscore', [ClientController::class, 'myscore']);
-        Route::get('/quiz/{slug}', [HomeController::class, 'getcategory']);
-        Route::post('/send', [QuestionController::class, 'sendquiz']);
-        Route::post('/checkans', [QuestionController::class, 'checkanswer']);
+        Route::get('/home', [HomeController::class, 'index']);
+        Route::get('/scores', [ClientController::class, 'scores']);
+        //Route::get('/{slug}', [ClientController::class, 'send_message']);
+        
+
+        Route::middleware('guest:client')->group(function () {
+            Route::get('/register', [ClientController::class, 'create'])->name('register.client');
+            Route::post('/register', [ClientController::class, 'store']);
+
+            Route::get('/login', [ClientController::class, 'showlogin'])->name('login.client');
+            Route::post('/login', [ClientController::class, 'login']);
+        });
     });
-});
+
+
+    Route::middleware(['auth:client', 'verified'])->group(function () {
+        Route::post('u/logout', [ClientController::class, 'logout'])->name('logout.client');
+        //account
+        Route::post('u/delete', [ClientController::class, 'destroy']);
+        Route::get('/balanceinfo', [ClientController::class, 'balanceinfo']);
+
+        Route::prefix('{lang}')->group(function () {
+            //account
+            Route::post('/updatepass', [ClientController::class, 'updatepass'])->name('client.updatepass');
+            Route::get('/account', [ClientController::class, 'edit'])->name('client.account');
+            Route::post('/update', [ClientController::class, 'update'])->name('client.update');
+            Route::post('/pull', [ClientController::class, 'pull']);
+            //my score
+            Route::get('/myscore', [ClientController::class, 'myscore']);
+            Route::get('/quiz/{slug}', [HomeController::class, 'getcategory']);
+            Route::post('/send', [QuestionController::class, 'sendquiz']);
+            Route::post('/checkans', [QuestionController::class, 'checkanswer']);
+        });
+    });
+
+
 require __DIR__ . '/auth.php';
 

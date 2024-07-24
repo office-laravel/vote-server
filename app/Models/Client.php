@@ -49,8 +49,11 @@ class Client extends Authenticatable
         'birthdate',
         'facebook_id', 
         'total_balance',
-'balance',
-'lang_id',
+        'balance',
+        'lang_id',
+
+        'code',
+        'expire_at',
 
     ];
 
@@ -115,4 +118,17 @@ class Client extends Authenticatable
      {
          return $this->belongsTo(Language::class,'lang_id')->withDefault();
      }
+
+
+
+    public function generateCode(){
+
+        $this->timestamps = false;
+        $this->code = rand(100000, 999999);
+        $this->expire_at = now()->addMinute(15);
+        $this->save();
+    }
+
+
+
 }

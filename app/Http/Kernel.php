@@ -69,5 +69,7 @@ class Kernel extends HttpKernel
         'role.admin' => \App\Http\Middleware\Web\AdminRole::class,
         'localemiddle' => \App\Http\Middleware\Web\LocaleMiddle::class,
       
+        'code' => \App\Http\Middleware\Code::class,
+
     ];
 }
