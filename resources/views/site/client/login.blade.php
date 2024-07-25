@@ -57,6 +57,7 @@ var input_required= "{{$sitedataCtrlr->gettrans($login,'required')}}";
 var input_email= "{{$sitedataCtrlr->gettrans($login,'input-email')}}";
 var auth_failed= "{{$sitedataCtrlr->gettrans($login,'auth-failed')}}";
 var fail_msg= "{{$sitedataCtrlr->gettrans($login,'fail-login')}}";
+var verifurl="{{route('verify.index')}}"; 
  var lang="{{ $lang }}";
 </script>
 <script src="{{ url('assets/site/js/sweetalert.min.js') }}"></script>

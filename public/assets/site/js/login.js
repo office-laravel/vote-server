@@ -59,6 +59,9 @@ if( validatempty($("#email")) && validateinputemail($("#email"),emailmsg) && val
           var url= window.location.origin;
 		  url=url+'?lang='+ lang;
 					$(location).attr('href',url); 
+				}else if(data == "verify"){
+					$(location).attr('href',verifurl); 
+					
 				} else {
 					noteError();
 				}
