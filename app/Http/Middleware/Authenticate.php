@@ -25,11 +25,9 @@ class Authenticate extends Middleware
                return route('login.client', $lang);
              
             } else if (in_array('guest:client', $request->route()->middleware())) {
-                if(auth()->guard('clients')->user()->code==null){
+             
                     return route('site.home');
-                }else{
-                    return route('verify.index');   
-                }
+                
               
             // return  route('mymessages');
             } else if (in_array('auth:web', $request->route()->middleware())) {
