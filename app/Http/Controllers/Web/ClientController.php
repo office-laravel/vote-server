@@ -128,6 +128,10 @@ class ClientController extends Controller
     $request->session()->regenerate();
     //new code
     //return redirect()->intended(Route('mymessages',false));
+    
+    if(auth()->guard('client')->user()->code != null){
+      return response()->json("verify");
+    }
     return response()->json("ok");
 
 

@@ -15,16 +15,16 @@ class Code
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $client = auth()->user();
+        $client = auth()->guard('client')->user();
 
-        if(auth()->check() && $client->code){
+        if(auth()->guard('client')->check() && $client->code){
 
-            if(!$request->is('verify*')){       // route in web.php his url 'verify' ... 
+            // if(!$request->is('verify*')){       // route in web.php his url 'verify' ... 
                                                 // * is all functions in CodeController
 
                return redirect()->route('verify.index');
                                             
-            }
+            // }
         }
 
         return $next($request);

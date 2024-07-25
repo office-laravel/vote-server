@@ -35,9 +35,10 @@ class Code extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('رسالة التحقق')
+            ->line('كود التحقق الخاص بك هو' . $notifiable->code)
+            ->action('تأكيد الدخول', route('verify.index'))
+            ->line('Thank you for using our application!');
     }
 
     /**

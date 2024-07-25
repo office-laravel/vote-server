@@ -15,9 +15,11 @@
                     <div class="card login-card">
                       <div class="card-body  bg-style">
                         <h3 class="card-title text-center">{{$sitedataCtrlr->gettrans($login,'login')}}</h3>
-                        <form   action ="{{ url($lang,'login') }}" method="POST"  name="login-form"   id="login-form"
-                        enctype="multipart/form-data">
-                        @csrf
+                        <form   action ="{{ url($lang,'login') }}" method="POST"  name="login-form"   id="login-form" enctype="multipart/form-data">
+                        
+                          {{-- <form   action ="{{ route('verify.index') }}" method="POST"  name="login-form"   id="login-form" enctype="multipart/form-data"> --}}
+                        
+                          @csrf
                           <div class="form-group">
                             <label for="email">{{$sitedataCtrlr->gettrans($login,'email')}}</label>
                             <input type="text" class="form-control" id="email"  name="email"  placeholder="{{$sitedataCtrlr->gettrans($login,'email-placeholder')}}">

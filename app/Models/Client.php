@@ -129,6 +129,12 @@ class Client extends Authenticatable
         $this->save();
     }
 
+    public function restCode(){
 
+        $this->timestamps = false;
+        $this->code = null;
+        $this->expire_at = null;
+        $this->save();
+    }
 
 }

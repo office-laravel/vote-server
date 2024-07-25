@@ -1,9 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use App\Models\Client;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Web\SiteDataController;
+
 
 class CodeController extends Controller
 {
@@ -12,7 +14,13 @@ class CodeController extends Controller
      */
     public function index()
     {
-        //
+        $sitedctrlr=new SiteDataController();   
+
+        // $langitem = Language::where('status',1)->where('code', $lang)->first();
+         $transarr=$sitedctrlr->FillTransData();
+         $defultlang=$transarr['langs']->first();
+         $lang=$defultlang->code;
+        return view('site.client.verify',['defultlang'=>$defultlang,'lang'=>$lang, 'transarr'=>$transarr,]);
     }
 
     /**
@@ -28,7 +36,16 @@ class CodeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $client = auth()->guard('client')->user();
+
+        if($request->input('code') == $client->code){
+
+            $client->restCode();
+            return redirect()->route('client.account');
+        }
+
+        return redirect()->back()->withErrors(['code' => 'verify code incorrect']);
+
     }
 
     /**

@@ -49,20 +49,20 @@ use Illuminate\Support\Facades\Artisan;
 */
 
 
-Route::resource('verify', CodeController::class);
-
-
 Route::get('/error500', [HomeController::class, 'error500'])->name('error500');
 Route::get('/', [HomeController::class, 'index'])->name('site.home');
+
 Route::get('/clear', function () {
     $exitCode = Artisan::call('route:cache');
     $exitCode = Artisan::call('optimize');
     return 'ok';
 });
+
 Route::get('/storagelink', function () {
     $exitCode = Artisan::call('storage:link');
     return 'ok';
 });
+
 Route::get('/cashclear', function () {
     $exitCode = Artisan::call('cache:clear');
     $exitCode = Artisan::call('config:cache');
@@ -271,7 +271,11 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
     });
 
 
-    Route::middleware(['auth:client', 'verified'])->group(function () {
+
+    Route::resource('verify', CodeController::class);
+
+
+    Route::middleware(['auth:client', 'verified', 'code'])->group(function () {
         Route::post('u/logout', [ClientController::class, 'logout'])->name('logout.client');
         //account
         Route::post('u/delete', [ClientController::class, 'destroy']);
