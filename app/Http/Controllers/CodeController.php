@@ -41,7 +41,7 @@ class CodeController extends Controller
         if($request->input('code') == $client->code){
 
             $client->restCode();
-            return redirect()->route('client.account');
+            return redirect()->route('site.home');
         }
 
         return redirect()->back()->withErrors(['code' => 'verify code incorrect']);
