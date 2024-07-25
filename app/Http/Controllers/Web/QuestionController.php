@@ -21,7 +21,10 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Session;
- 
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+use Illuminate\Support\Facades\Storage;
+use File;
 class QuestionController extends Controller
 {
     /**
@@ -64,9 +67,11 @@ class QuestionController extends Controller
      */
     public function create()
     {
+        $strgCtrlr = new StorageController();
+    $def_op=  $strgCtrlr->DefaultPath('default-op');
         $lang_list = Language::orderByDesc('is_default')->get();
         $cat_list = Category::where('code', 'ques')->orderBy('title')->get();
-        return view("admin.question.create", ["lang_list" => $lang_list, 'cat_list' => $cat_list]);
+        return view("admin.question.create", ["lang_list" => $lang_list, 'cat_list' => $cat_list,'default_op'=>$def_op]);
     }
 
     /**
@@ -87,7 +92,7 @@ class QuestionController extends Controller
         } else {
             //check if answers exist at least 2
             $i = 0;
-            foreach ($formdata['answer_content'] as $key => $option) {
+            foreach ($formdata['op_content'] as $key => $option) {
                 if (!is_null($option)) {
                     if (trim($option) != "") {
                         $i++;
@@ -97,30 +102,40 @@ class QuestionController extends Controller
             if ($i >= 2) {
                 //add ques
                 $newObj = new Question();
+                
                 $newObj->content = $formdata['content'];
                 $newObj->points = 1;
                 $newObj->category_id = $formdata['category_id'];
                 $newObj->lang_id = $formdata['lang_id'];
                 $newObj->status = isset($formdata["status"]) ? 1 : 0;
-                $newObj->type = 'text';
+                $newObj->type =  $formdata['type'];
                 $newObj->createuser_id = Auth::user()->id;
                 $newObj->updateuser_id = Auth::user()->id;
                 $newObj->save();
                 //save answers
-                foreach ($formdata['answer_content'] as $key => $option) {
+                foreach ($formdata['op_content'] as $key => $option) {
                     if (!is_null($option)) {
                         $answer = new Answer();
                         $answer->question_id = $newObj->id;
                         $answer->sequence = $key;
                         $answer->content = trim($option);
-                        $answer->is_correct = $formdata['is_correct'] == $key ? 1 : 0;
+                     //   $answer->is_correct = $formdata['is_correct'] == $key ? 1 : 0;
                         $answer->status = 1;
                         $answer->createuser_id = Auth::user()->id;
                         $answer->updateuser_id = Auth::user()->id;
-                        $answer->type = 'text';
+                        $answer->type = $formdata['type'];
                         $answer->save();
                     }
                 }
+               
+                if ($request->hasFile('image')) {
+
+                    $file = $request->file('image');
+                    // $filename= $file->getClientOriginalName();
+            
+                    $this->storeImage($file, $newObj->id);
+                    //  $this->storeImage( $file,2);
+                  }
                 return response()->json("ok");
             } else {
                 return response()->json("fewanswers");
@@ -431,5 +446,52 @@ $client->save();
         }
         return redirect()->back();
 
+    }
+    public function storeImage($file, $id)
+    {
+      $imagemodel = Question::find($id);
+      $strgCtrlr = new StorageController();
+      $path = $strgCtrlr->path['questions'];
+      $oldimage = $imagemodel->file;
+      $oldimagename = basename($oldimage);
+     // $oldimagepath = $path . '/' . $oldimagename;
+      //save photo
+  
+      if ($file !== null) {
+
+        $ext = $file->getClientOriginalExtension();
+        if (Str::lower($ext) == 'svg') {
+            if ($file !== null) {
+                $ext = $file->getClientOriginalExtension();
+                $filename = rand(10000, 99999) . $id . '.' . $ext;
+               
+                $path = $file->storeAs($path, $filename, 'public');
+                Question::find($id)->update([
+                    "file" => $filename
+                ]);
+                Storage::delete("public/" . $path . '/' . $oldimagename);
+            }
+        }else{
+        //  $filename= rand(10000, 99999).".".$file->getClientOriginalExtension();
+  
+        $filename = rand(10000, 99999). $id . ".webp";
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
+        $image = $image->toWebp(75);
+        if (!File::isDirectory(Storage::url('/' . $path))) {
+          Storage::makeDirectory('public/' . $path);
+        }
+
+        $image->save(storage_path('app/public') . '/' . $path . '/' . $filename);
+        //   $url = url('storage/app/public' . '/' . $path . '/' . $filename);
+        Question::find($id)->update([
+          "file" => $filename
+        ]);
+        Storage::delete("public/" . $path . '/' . $oldimagename);
+//webp
+    }
+
+      }
+      return 1;
     }
 }

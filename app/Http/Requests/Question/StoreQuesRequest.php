@@ -21,6 +21,8 @@ class StoreQuesRequest extends FormRequest
        'content'=>'required|string',
         'category_id'=>'required|integer|gt:0',
         'lang_id'=>'required|integer|gt:0', 
+        'type'=>'required|in:text,image',
+     
        ];   
     
     }

@@ -101,3 +101,17 @@ border: #ee335e  solid 1px !important;
     padding-top: 5px;
     padding-bottom: 5px;
 }
+.btn-del-op{
+     border-color: lightgray; 
+}
+
+.div-op-image
+  {
+    padding-right: 35px;
+    padding-bottom: 10px;
+}
+.imageicon 
+{
+    height: 200px;
+    width:300px;
+}

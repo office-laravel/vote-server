@@ -61,8 +61,9 @@ class StorageController extends Controller
     $this->path['messages'] = 'images/messages';
     $this->vidpath['messages'] = 'images/messages/video';
     $this->soundpath['messages'] = 'images/messages/sound';
-    
-    
+  //questions
+  $this->path['questions'] = 'images/questions';
+  $this->path['answers'] = 'images/answers';
     //value
  
     //answer
@@ -141,7 +142,11 @@ class StorageController extends Controller
       //  }
        $url =  $this->getlocalpath($this->path['default']). $this->defaultimage;
       
-    } else {
+    }else if($type == "default-op"){
+
+      $url =  $this->getlocalpath($this->path['default']).$type.'.png';
+    }
+     else {
       // if(File::exists(base_path('public\index.php')))  {
       //   $url = url(Storage::url($this->iconpath['default'])) . '/' . $this->defaultsvg;
       //  }
@@ -244,6 +249,24 @@ public function MessagePath($type)
     }
     return $url;
   }
+
+  
+public function QuestionPath()
+{ //image sound video
+  $url = "";
+   
+     $url =  $this->getlocalpath($this->path['questions']);      
+  
+  return $url;
+}
+public function AnswerPath()
+{ //image sound video
+  $url = "";
+   
+     $url =  $this->getlocalpath($this->path['answers']);      
+  
+  return $url;
+}
  /*
   public static function CalcPercentVal($percent,$total)
   {
