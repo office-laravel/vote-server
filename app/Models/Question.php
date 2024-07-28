@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Http\Controllers\Web\StorageController;
 class Question extends Model
 {
     use HasFactory;
@@ -20,6 +21,19 @@ class Question extends Model
         'type',
         'file',
     ];
+
+  protected $appends= ['image_path' ];
+    public function getImagePathAttribute(){
+        $conv="";
+        $strgCtrlr = new StorageController(); 
+        if(is_null($this->file)|| $this->file==''){
+          $conv =$strgCtrlr->DefaultPath('image'); 
+        } else {
+            $url = $strgCtrlr->QuestionPath();
+            $conv =  $url.$this->image;
+        }        
+            return  $conv;
+     }
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class)->withDefault();

@@ -61,7 +61,7 @@
                                 <!--placeholder-->
                                 <option title=""value="0" class="text-muted">اختر النوع</option>
 
-                                <option value="text">نص</option>
+                                <option value="text" selected>نص</option>
                                 <option value="image">صورة</option>
                             </select>
                             <span id="type_error" class="error invalid-feedback"></span>
@@ -128,7 +128,7 @@
                         </div>
                     </div>
                     {{-- image options  style="display: none;" --}}
-                    <div id="image-container">
+                    <div id="image-container" style="display: none;">
                         <div class="form-group row " id="image-div-container">
                             <div class="col-sm-12 col-12">
                                 <label class="col-12 col-form-label" style="text-align: right">الخيارات صور</label>

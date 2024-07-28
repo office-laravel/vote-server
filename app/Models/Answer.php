@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Http\Controllers\Web\StorageController;
 class Answer extends Model
 {
     use HasFactory;
@@ -21,6 +22,18 @@ class Answer extends Model
         'sequence',
 
     ];
+    protected $appends= ['image_path' ];
+    public function getImagePathAttribute(){
+        $conv="";
+        $strgCtrlr = new StorageController(); 
+        if(is_null($this->file)|| $this->file==''){
+       //   $conv =$strgCtrlr->DefaultPath('image'); 
+        } else if($this->type=='image'){
+            $url = $strgCtrlr->AnswerPath();
+            $conv =  $url.$this->file;
+        }        
+            return  $conv;
+     }
     public function answersclients(): HasMany
     {
         return $this->hasMany(AnswersClient::class);

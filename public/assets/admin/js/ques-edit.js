@@ -1,9 +1,7 @@
 var urlval = "";
-var i = 3;
-var im = 3;
+
 $(document).ready(function () {
 
-	
 	$('#btn_add_option').on('click', function () {
 
 		var $divclon = $('#main-op').clone().prop('id', 'divoption_' + i).addClass('dynamicdiv').show();
