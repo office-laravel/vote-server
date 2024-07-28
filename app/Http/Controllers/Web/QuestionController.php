@@ -90,15 +90,66 @@ class QuestionController extends Controller
 
             return response()->json($validator);
         } else {
-            //check if answers exist at least 2
-            $i = 0;
-            foreach ($formdata['op_content'] as $key => $option) {
-                if (!is_null($option)) {
-                    if (trim($option) != "") {
-                        $i++;
-                    }
-                }
-            }
+            if($formdata['type']=='text'){
+ //check if answers exist at least 2
+ $i = 0;
+ foreach ($formdata['op_content'] as $key => $option) {
+     if (!is_null($option)) {
+         if (trim($option) != "") {
+             $i++;
+         }
+     }
+ }
+ if ($i >= 2) {
+     //add ques
+     $newObj = new Question();
+     
+     $newObj->content = $formdata['content'];
+     $newObj->points = 1;
+     $newObj->category_id = $formdata['category_id'];
+     $newObj->lang_id = $formdata['lang_id'];
+     $newObj->status = isset($formdata["status"]) ? 1 : 0;
+     $newObj->type =  $formdata['type'];
+     $newObj->createuser_id = Auth::user()->id;
+     $newObj->updateuser_id = Auth::user()->id;
+     $newObj->save();
+     //save answers
+     foreach ($formdata['op_content'] as $key => $option) {
+         if (!is_null($option)) {
+             $answer = new Answer();
+             $answer->question_id = $newObj->id;
+             $answer->sequence = $key;
+             $answer->content = trim($option);
+          //   $answer->is_correct = $formdata['is_correct'] == $key ? 1 : 0;
+             $answer->status = 1;
+             $answer->createuser_id = Auth::user()->id;
+             $answer->updateuser_id = Auth::user()->id;
+             $answer->type = $formdata['type'];
+             $answer->save();
+         }
+     }
+    
+     if ($request->hasFile('image')) {
+
+         $file = $request->file('image');
+         // $filename= $file->getClientOriginalName();
+ 
+         $this->storeImage($file, $newObj->id);
+         //  $this->storeImage( $file,2);
+       }
+     return response()->json("ok");
+ } else {
+     return response()->json("fewanswers");
+ }
+            }else{
+                 //image
+                $files = $request->file('img_op');
+      //check if answers image exist at least 2
+                $i = 0;
+                foreach($files as $image){
+                    $i++;
+                } 
+       
             if ($i >= 2) {
                 //add ques
                 $newObj = new Question();
@@ -113,23 +164,31 @@ class QuestionController extends Controller
                 $newObj->updateuser_id = Auth::user()->id;
                 $newObj->save();
                 //save answers
-                foreach ($formdata['op_content'] as $key => $option) {
-                    if (!is_null($option)) {
+                $i=0;
+                foreach($files as $key => $image){
+
+                    // if (($option)) {
                         $answer = new Answer();
                         $answer->question_id = $newObj->id;
-                        $answer->sequence = $key;
-                        $answer->content = trim($option);
-                     //   $answer->is_correct = $formdata['is_correct'] == $key ? 1 : 0;
+                        $answer->sequence = $i;
+                      // $answer->content = trim($option);
+                      if(isset($formdata['img_op_content'][$key]))
+                      {
+                       $answer->content = $formdata['img_op_content'][$key];
+                }
+                    //   $answer->file=
                         $answer->status = 1;
                         $answer->createuser_id = Auth::user()->id;
                         $answer->updateuser_id = Auth::user()->id;
                         $answer->type = $formdata['type'];
                         $answer->save();
-                    }
-                }
-               
-                if ($request->hasFile('image')) {
+                        $this->storeAnswerImage($image,  $answer->id);
+                        $i++;
+                    // }
 
+                }
+               //ques image
+                if ($request->hasFile('image')) {
                     $file = $request->file('image');
                     // $filename= $file->getClientOriginalName();
             
@@ -140,8 +199,8 @@ class QuestionController extends Controller
             } else {
                 return response()->json("fewanswers");
             }
-
-        }
+            }
+                }
     }
 
     /**
@@ -441,7 +500,16 @@ $client->save();
         //delete 
         $item = Question::find($id);
         if (!($item === null)) {
-            Answer::where('question_id', $id)->delete();
+            $oldimagename = $item->file;
+            $strgCtrlr = new StorageController();
+            $path = $strgCtrlr->path['questions'];
+            Storage::delete("public/" . $path . '/' . $oldimagename);
+
+          $ans_list=  Answer::where('question_id', $id)->select('id','question_id')->get();
+          $ansctrlr=new AnswerController();
+foreach($ans_list as $ans){
+    $ansctrlr->del_answer($ans->id);
+}
             Question::find($id)->delete();
         }
         return redirect()->back();
@@ -485,6 +553,51 @@ $client->save();
         $image->save(storage_path('app/public') . '/' . $path . '/' . $filename);
         //   $url = url('storage/app/public' . '/' . $path . '/' . $filename);
         Question::find($id)->update([
+          "file" => $filename
+        ]);
+        Storage::delete("public/" . $path . '/' . $oldimagename);
+//webp
+    }
+
+      }
+      return 1;
+    }
+    public function storeAnswerImage($file, $id)
+    {
+      $imagemodel = Answer::find($id);
+      $strgCtrlr = new StorageController();
+      $path = $strgCtrlr->path['answers'];
+      $oldimage = $imagemodel->file;
+      $oldimagename = basename($oldimage);
+     // $oldimagepath = $path . '/' . $oldimagename;
+      //save photo
+  
+      if ($file !== null) {
+
+        $ext = $file->getClientOriginalExtension();
+        if (Str::lower($ext) == 'svg') {
+            if ($file !== null) {
+                $ext = $file->getClientOriginalExtension();
+                $filename = rand(10000, 99999) . $id . '.' . $ext;
+               
+                $path = $file->storeAs($path, $filename, 'public');
+                Answer::find($id)->update([
+                    "file" => $filename
+                ]);
+                Storage::delete("public/" . $path . '/' . $oldimagename);
+            }
+        }else{
+        //  $filename= rand(10000, 99999).".".$file->getClientOriginalExtension();  
+        $filename = rand(10000, 99999). $id . ".webp";
+        $manager = new ImageManager(new Driver());
+        $image = $manager->read($file);
+        $image = $image->toWebp(75);
+        if (!File::isDirectory(Storage::url('/' . $path))) {
+          Storage::makeDirectory('public/' . $path);
+        }
+        $image->save(storage_path('app/public') . '/' . $path . '/' . $filename);
+        //   $url = url('storage/app/public' . '/' . $path . '/' . $filename);
+        Answer::find($id)->update([
           "file" => $filename
         ]);
         Storage::delete("public/" . $path . '/' . $oldimagename);

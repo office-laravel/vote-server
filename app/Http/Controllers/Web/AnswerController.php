@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\Answer;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
+use File;
 class AnswerController extends Controller
 {
     /**
@@ -58,8 +60,23 @@ class AnswerController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy( $id)
     {
-        //
+      $this->del_answer($id);
+        return redirect()->back();
     }
+    public function del_answer($id)
+    {
+        $item = Answer::find($id);
+        if (!($item === null)) {
+            $oldimagename = $item->file;
+            $strgCtrlr = new StorageController();
+            $path = $strgCtrlr->path['answers'];
+            Storage::delete("public/" . $path . '/' . $oldimagename);
+            Answer::find($id)->delete();
+        }
+        return 1;
+    }
+    
+    
 }

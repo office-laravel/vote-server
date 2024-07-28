@@ -99,8 +99,11 @@ var inpid=inputsubid+'_' + im;
 	// $('.imageicon').click(function() {
 	// 	$('#image-op').click();
 	//   });
+// 	$(document).on('click', '.imageicon', function() {
+// 		// This will work!
+//   });
 	   // عند النقر على أي صورة
-	   $('.imageicon').click(function() {
+	   $(document).on('click', '.imageicon', function() {
         // احصل على عنصر الإدخال الملف الأقرب إلى الصورة
         var inputFile = $(this).closest('.form-group').find('.input-file-op');
 
@@ -109,7 +112,8 @@ var inpid=inputsubid+'_' + im;
     });
 
     // عندما يتم تغيير ملف الإدخال
-    $('.input-file-op').change(function() {
+	$(document).on('change', '.input-file-op', function() {
+ 
         // احصل على الملف المختار
         var file = this.files[0];
         var imgTag = $(this).closest('.form-group').find('img');
@@ -156,6 +160,22 @@ function delsort(button) {
 	});
  
 	
+}
+function delimgsort(button) {
+	button.parentNode.parentNode.remove();	 
+	im--;
+   var j=1;
+   $('.img-num-span').each( function () {		
+	  $(this).text(j+'-');
+	  j++;
+  });
+   j=1;
+  $('.inputimg').each( function () {		
+	  $(this).attr("placeholder", "الخيار "+j);
+	  j++;
+  });
+
+  
 }
 ///////////////////////////////////////////////////////
 function noteSuccess() {
