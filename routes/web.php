@@ -27,6 +27,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Web\PasswordController;
 use App\Http\Controllers\Web\ClientPasswordResetController;
+use App\Http\Controllers\Web\AnswerController;
+
 //site
 use App\Http\Controllers\HomeController;
 
@@ -152,6 +154,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
             Route::post('/update/{id}', [CategoryQuesController::class, 'update'])->name('categoryques.update');
             Route::get('/sort/{loc}', [LocationController::class, 'sortpage']);
         });
+      
         //Level
         Route::resource('level', LevelController::class, ['except' => ['update']]);
         Route::prefix('level')->group(function () {
@@ -163,6 +166,10 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
         Route::prefix('question')->group(function () {
             Route::post('/update/{id}', [QuestionController::class, 'update'])->name('question.update');
             Route::any('/search', [QuestionController::class, 'search']);
+        });
+        Route::prefix('answer')->group(function () {
+            Route::post('/destroy/{id}', [AnswerController::class,'destroyans']);
+             
         });
         //footer
         Route::prefix('post')->group(function () {

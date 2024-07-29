@@ -46,20 +46,13 @@
                     </a>
                    
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link " href="{{ route('level.index') }}">
-                        <div class="text-white text-center ms-2 d-flex align-items-center justify-content-center">
-                            <i class="material-icons-round opacity-10">table_view</i>
-                        </div>
-                        <span class="nav-link-text me-1">المستويات</span>
-                    </a>
-                </li>
+           
                 <li class="nav-item">
                     <a class="nav-link " href="{{ route('question.index') }}">
                         <div class="text-white text-center ms-2 d-flex align-items-center justify-content-center">
                             <i class="material-icons-round opacity-10">table_view</i>
                         </div>
-                        <span class="nav-link-text me-1">الاسئلة</span>
+                        <span class="nav-link-text me-1">التصويت</span>
                     </a>
                 </li>
                 {{-- <li class="nav-item">

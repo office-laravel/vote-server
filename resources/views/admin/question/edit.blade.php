@@ -169,7 +169,7 @@
                                 id="img_op_content-{{$answer->sequence }}"
                                 placeholder="الخيار {{$answer->sequence}}" value="{{  $answer->content }}">
                         </div>
-                        <button type="button" onclick="delimgsort(this);" class="btn-del-op col-sm-1 col-1"
+                        <button type="button"   id="ans-{{$answer->id}}" class="btn-del-op col-sm-1 col-1 btn-del-ans"
                             style="display: block;"><i class="fas fa-times"
                                 style="font-size:16px;color:red;"></i>
                         </button>
@@ -248,13 +248,14 @@
                     <input type="text" class="form-controll inputimg" name="" id="" placeholder=""
                         value="">
                 </div>
-                <button type="button" onclick="delimgsort(this);" class="btn-del-op col-sm-1 col-1"
+                <button type="button" onclick="delimgsort(this);"   class="btn-del-op col-sm-1 col-1"
                     style="display: block;"><i class="fas fa-times" style="font-size:16px;color:red;"></i>
                 </button>
             </div>
         </div>
-
-
+        <form name="del_form" id="del_form" method="POST" action="{{url('admin/answer/destroy', "itemid")}}">
+            @csrf
+        </form>
     @endsection
     @section('css')
         <link rel="stylesheet" href="{{ URL::asset('assets/admin/css/content.css') }}">

@@ -65,6 +65,11 @@ class AnswerController extends Controller
       $this->del_answer($id);
         return redirect()->back();
     }
+    public function destroyans($id)
+    {
+      $this->del_answer($id);
+      return response()->json("ok"); 
+    }
     public function del_answer($id)
     {
         $item = Answer::find($id);

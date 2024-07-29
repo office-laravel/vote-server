@@ -47,6 +47,16 @@ var inpid=inputsubid+'_' + im;
 		var formid = $(this).closest("form").attr('id');
 		sendform('#' + formid);
 	});
+	//delet one answer
+	$('.btn-del-ans').on('click', function (e) {
+		//e.preventDefault();
+		var ansid = $(this).attr('id');
+		 var button=$(this);
+		ansid = ansid.replace("ans-","");
+		 
+		senddelform(ansid,button);
+	});
+	
 	$('#btn_reset').on('click', function (e) {
 		e.preventDefault();
 		var formid = $(this).closest("form").attr('id');
@@ -87,6 +97,44 @@ var inpid=inputsubid+'_' + im;
 					$("#" + key + "-error").text(val[0]).show();
 					$("#" + key).addClass('parsley-error');
 				});
+
+			}, finally: function () {		 
+
+			}
+		});
+	}
+	function senddelform(ansid,button) {
+		//ClearErrors();
+		var form = $("#del_form")[0];
+		var formData = new FormData(form);
+
+	var	ansurl = $("#del_form").attr("action");
+	ansurl=	ansurl.replace("itemid",ansid);
+		$.ajax({
+			url: ansurl,
+			type: "POST",
+			data: formData,
+			contentType: false,
+			processData: false,
+
+			success: function (data) {
+				if (data.length == 0) {
+					//noteError();
+				} else if (data == "ok") {
+					//noteSuccess(); 
+delimg(button);
+				} else {
+					noteError();
+				}
+
+			}, error: function (errorresult) {
+				var response = $.parseJSON(errorresult.responseText);
+				noteError();
+				// $.each(response.errors, function (key, val) {
+				// 	$("#" + "info-form-error").append('<li class="text-danger">' + val[0] + '</li>');
+				// 	$("#" + key + "-error").text(val[0]).show();
+				// 	$("#" + key).addClass('parsley-error');
+				// });
 
 			}, finally: function () {		 
 
@@ -151,6 +199,22 @@ var inpid=inputsubid+'_' + im;
 		}
 	}
 	showByType();
+	function delimg(button) {
+		$(button).parent().parent().remove();
+		im--;
+	   var j=1;
+	   $('.img-num-span').each( function () {		
+		  $(this).text(j+'-');
+		  j++;
+	  });
+	   j=1;
+	  $('.inputimg').each( function () {		
+		  $(this).attr("placeholder", "الخيار "+j);
+		  j++;
+	  });
+	
+	  
+	}
 });
 function delsort(button) {
 	  button.parentNode.parentNode.remove();	 
@@ -166,6 +230,22 @@ function delsort(button) {
 		j++;
 	});
  
+	function delimg(button) {
+		button.parentNode.parentNode.remove();	 
+		im--;
+	   var j=1;
+	   $('.img-num-span').each( function () {		
+		  $(this).text(j+'-');
+		  j++;
+	  });
+	   j=1;
+	  $('.inputimg').each( function () {		
+		  $(this).attr("placeholder", "الخيار "+j);
+		  j++;
+	  });
+	
+	  
+	}
 	
 }
 function delimgsort(button) {
