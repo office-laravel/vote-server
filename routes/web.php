@@ -32,6 +32,7 @@ use App\Http\Controllers\HomeController;
 
 
 use App\Http\Controllers\CodeController;
+use App\Http\Controllers\Auth\GoogleController;
 
 
 use Illuminate\Support\Facades\Artisan;
@@ -47,6 +48,10 @@ use Illuminate\Support\Facades\Artisan;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
 
 Route::get('/error500', [HomeController::class, 'error500'])->name('error500');

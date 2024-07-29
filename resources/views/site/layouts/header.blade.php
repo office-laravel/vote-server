@@ -31,9 +31,18 @@
             <li class="nav-item  ">
                 <a class="nav-link  nav-link-pad" href="{{ url($lang,'register') }}">{{$sitedataCtrlr->gettrans($h_menu,'new-account')}}</a>
             </li>
-               <li class="nav-item  ">
+               <li class="nav-item">
                 <a class="nav-link  nav-link-pad" href="{{ route('login.client',$lang) }}">{{$sitedataCtrlr->gettrans($h_menu,'login')}}</a>
               </li>
+
+              
+              {{-- <li class="nav-item">
+                <a class="nav-link nav-link-pad" href="/auth/google">
+                  التسجيل عن طريق البريد الإلكتروني
+                </a>
+              </li> --}}
+ 
+
             @endif
          
                 {{-- start lang--}}

@@ -11,7 +11,7 @@
         "kutia-software-company/larafirebase": "*",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.3",
-        "laravel/socialite": "*",
+        "laravel/socialite": "^5.15",
         "laravel/tinker": "^2.8",
         "laravel/ui": "^4.3",
         "pbmedia/laravel-ffmpeg": "*",

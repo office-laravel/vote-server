@@ -41,7 +41,13 @@
                                         {{$sitedataCtrlr->gettrans($login,'no-account')}}
                                         <a href="{{ url($lang,'register') }}">{{$sitedataCtrlr->gettrans($login,'register')}}</a>
                                     </p>
-                                    </div>
+                                    أو
+                                    <p>
+                                      <a href="/auth/google" style="text-decoration:none;">
+                                        التسجيل عن طريق البريد الإلكتروني
+                                    </a>
+                                  </p>
+                        </div>
                       </div>
                     </div>
                   </div>
