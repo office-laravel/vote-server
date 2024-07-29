@@ -266,7 +266,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
 
     //
     Route::get('{lang}/page/{slug}', [HomeController::class, 'showpage']);
-    Route::get('{lang}/categories', [HomeController::class, 'getcategories']);
+    Route::get('{lang}/questions', [QuestionController::class, 'getquestions']);
 
     Route::prefix('{lang}')->group(function () {
         Route::get('/home', [HomeController::class, 'index']);
@@ -305,6 +305,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
             Route::get('/vote/{slug}', [HomeController::class, 'getques']);
             Route::post('/send', [QuestionController::class, 'sendquiz']);
             Route::post('/checkans', [QuestionController::class, 'checkanswer']);
+
         });
     });
 

@@ -53,6 +53,28 @@ class QuestionController extends Controller
     // }
 
 
+    public function getquestions($lang)
+    {
+        $sitedctrlr=new SiteDataController();   
+
+        $transarr=$sitedctrlr->FillTransData($lang);
+        $defultlang=$transarr['langs']->first();
+
+        $home_page=$sitedctrlr->getbycode($defultlang->id,['home_page','footer-menu']);
+        // $catlist= $sitedctrlr-> getquescatbyloc('cats',$defultlang->id);
+        
+        $items = Question::where('lang_id', $defultlang->id)->where('status', 1)->paginate(100);
+
+        return view('site.content.categories',['questions'=>$items,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang
+        ,'home_page'=>$home_page ,'sitedataCtrlr'=>$sitedctrlr,]);   
+    }
+
+
+
+
+
+
+
     public function search(Request $request)
     {
 
