@@ -12,7 +12,7 @@
         <nav aria-label="breadcrumb">
             <ol class="breadcrumb">
                 <li class="breadcrumb-item"><a href="{{ url('/admin') }}">الرئيسية</a></li>
-                <li class="breadcrumb-item"><a href="{{ url('/admin/question') }}">الاسئلة</a></li>
+                <li class="breadcrumb-item"><a href="{{ url('/admin/question') }}">التصويت</a></li>
 
                 <li class="breadcrumb-item active" aria-current="page">جديد</li>
             </ol>
