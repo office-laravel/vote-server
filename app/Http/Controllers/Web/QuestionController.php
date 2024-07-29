@@ -26,6 +26,9 @@ use Intervention\Image\Drivers\Gd\Driver;
 use Illuminate\Support\Facades\Storage;
 use File;
 
+use App\Http\Requests\Client\StoreClientRequest;
+
+
 class QuestionController extends Controller
 {
     /**
@@ -37,6 +40,19 @@ class QuestionController extends Controller
 
         return view("admin.question.show", ["List" => $items,]);
     }
+
+
+    // public function all_question($lang)
+    // {
+    //     // StoreClientRequest::$lang=$lang;
+
+    //     $items = Question::where('lang_id', $lang)->where('status', 1)->paginate(100);
+
+    //     return dd($items);
+    //     // return view("site.content.sub-categories", ["List" => $items]);
+    // }
+
+
     public function search(Request $request)
     {
 

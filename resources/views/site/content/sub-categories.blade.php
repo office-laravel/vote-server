@@ -1,16 +1,16 @@
  
              <!-- قسم 2 -->
-             @if ($categories->first())
+            @if ($questions->first())
              @if (Auth::guard('client')->check())
                <div class="row sec-row  ">
                  <div class="col-12 text-center mb-4">
                   <div class="border-bottom text-center">
 
-                 <h3>{{$sitedataCtrlr->gettrans($home_page,'after-login')}}<h3>
+                    <h3>{{$sitedataCtrlr->gettrans($home_page,'after-login')}}<h3>
                  </div>
                 </div>
                </div>
-             @else
+              @else
                <div class="row sec-row">
                  <div class="col-12 text-center mb-4">
                   <div class="  border-bottom text-center">
@@ -19,26 +19,28 @@
                  </div>
                 </div>
                </div>
-             @endif 
+            @endif 
            @endif  
-         @forelse ($categories as $category)
+
+        @forelse ($questions as $question)
+        
           <div class="col-6 col-sm-4 col-md-3 col-lg-6 mb-4 p-1">
-            <a href="{{ $category['urlpath'] }}" class="category-link">
+            <a href="{{ url($lang.'/vote',$question->id) }}" class="category-link">
               <div class="category-card">
-                <img src="{{ $category['image_path'] }}" alt="{{ $category['tr_title']}}">
+                <img src="{{ $question->image_path }}" alt="{{ $question->content }}">
                 <div class="category-overlay">
-                  <h6>{{ $category['tr_title'] }}</h6>
+                  <h6>{{ $question->content }}</h6>
                 </div>
               </div>
             </a>
           </div>
+          
           @empty
           <div class="row sec-row">
             <div class="col-12 text-center mb-4">
              <p>{{$sitedataCtrlr->gettrans($home_page,'no-sections')}}</p>
             </div>
-          
           </div>
-          @endforelse      
+        @endforelse      
 		   
 		 

@@ -22,18 +22,22 @@ class Question extends Model
         'file',
     ];
 
-  protected $appends= ['image_path' ];
+    protected $appends= ['image_path' ];
+
     public function getImagePathAttribute(){
         $conv="";
         $strgCtrlr = new StorageController(); 
+        
         if(is_null($this->file)|| $this->file==''){
-          $conv =$strgCtrlr->DefaultPath('image'); 
+          $conv =$strgCtrlr->DefaultPath('default-ques'); 
         } else {
             $url = $strgCtrlr->QuestionPath();
-            $conv =  $url.$this->image;
+            $conv =  $url.$this->file;
         }        
             return  $conv;
-     }
+    }
+
+
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class)->withDefault();

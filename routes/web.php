@@ -80,6 +80,7 @@ Route::get('/cashclear', function () {
 Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin');
     Route::any('/search', [QuestionController::class, 'search']);
+    
     Route::middleware('role.admin:admin')->group(function () {
         Route::resource('user', UserController::class, ['except' => ['update']]);
         Route::prefix('user')->group(function () {
@@ -301,7 +302,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
             Route::post('/pull', [ClientController::class, 'pull']);
             //my score
             Route::get('/myscore', [ClientController::class, 'myscore']);
-            Route::get('/quiz/{slug}', [HomeController::class, 'getcategory']);
+            Route::get('/vote/{slug}', [HomeController::class, 'getques']);
             Route::post('/send', [QuestionController::class, 'sendquiz']);
             Route::post('/checkans', [QuestionController::class, 'checkanswer']);
         });

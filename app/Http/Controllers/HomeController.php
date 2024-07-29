@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use App\Models\Question;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Web\SiteDataController;
 use App\Models\Language;
@@ -38,9 +40,9 @@ class HomeController extends Controller
      
       $sitedctrlr=new SiteDataController();
    // $slidedata=  $sitedctrlr->getSlideData('home');
-    $transarr=$sitedctrlr->FillTransData($lang);
-  //  $transarr['langs']->select('code')->get();
- //   return  $sitedctrlr->getlangscod()  ;
+      $transarr=$sitedctrlr->FillTransData($lang);
+   // $transarr['langs']->select('code')->get();
+   // return  $sitedctrlr->getlangscod()  ;
     //
     
      
@@ -49,27 +51,38 @@ class HomeController extends Controller
       $lang=$formdata['lang'];
    } 
    $active='home';
-     if(isset($lang)){
-    //  $lang= $formdata["lang"];
-    $transarr=$sitedctrlr->FillTransData($lang);
-    $defultlang=$transarr['langs']->first();
-    $home_page=$sitedctrlr->getbycode($defultlang->id,['home_page']);
-   // $homearr= $sitedctrlr->gethomedata( $defultlang->id);
-   $catlist= $sitedctrlr-> getquescatbyloc('cats',$defultlang->id);
-      return view('site.home',['lang'=>$lang, 'transarr'=>$transarr,'defultlang'=>$defultlang, 'active_item'=>$active,'categories'=>$catlist,
+
+   if(isset($lang)){
+      //  $lang= $formdata["lang"];
+      $transarr=$sitedctrlr->FillTransData($lang);
+      $defultlang=$transarr['langs']->first();
+      $home_page=$sitedctrlr->getbycode($defultlang->id,['home_page']);
+      // $homearr= $sitedctrlr->gethomedata( $defultlang->id);
+      // $catlist= $sitedctrlr-> getquescatbyloc('cats',$defultlang->id);
+
+      $items = Question::where('lang_id', $defultlang->id)->where('status', 1)->paginate(100);
+      // dd($items);
+
+      return view('site.home',['lang'=>$lang, 'transarr'=>$transarr,'defultlang'=>$defultlang, 'active_item'=>$active,'questions'=>$items,
       'home_page'=>$home_page,'sitedataCtrlr'=>$sitedctrlr,
    ]);
-     }else{
+
+   }else{
+
       $transarr=$sitedctrlr->FillTransData();
       $defultlang=$transarr['langs']->first();
       $lang=  $defultlang->code;
-      $catlist= $sitedctrlr-> getquescatbyloc('cats',$defultlang->id);
-       $home_page=$sitedctrlr->getbycode($defultlang->id,['home_page']);
+      // $catlist= $sitedctrlr-> getquescatbyloc('cats',$defultlang->id);
+      $home_page=$sitedctrlr->getbycode($defultlang->id,['home_page']);
       //$homearr= $sitedctrlr->gethomedata( $defultlang->id);
-      return view('site.home',['transarr'=>$transarr,'lang'=>$lang, 'defultlang'=>$defultlang,'active_item'=>$active,'categories'=>$catlist,
-      'home_page'=>$home_page,'sitedataCtrlr'=>$sitedctrlr,
-   ]);
-     }
+      
+      $items = Question::where('lang_id', $defultlang->id)->where('status', 1)->paginate(100);
+      // dd($items);
+
+      return view('site.home',['transarr'=>$transarr,'lang'=>$lang, 'defultlang'=>$defultlang,'active_item'=>$active,'questions'=>$items,
+         'home_page'=>$home_page,'sitedataCtrlr'=>$sitedctrlr,
+      ]);
+   }
       
     }
     public function about( $lang=null)
@@ -154,6 +167,7 @@ else{
 //    if($more_post){
 // $more=$more_post['tr_title'];
 //    }
+   
    return view('site.content.categories',['categories'=>$catlist,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang
    ,'home_page'=>$home_page ,'sitedataCtrlr'=>$sitedctrlr,]);   
     }

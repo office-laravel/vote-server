@@ -27,6 +27,7 @@ class StorageController extends Controller
   public $soundpath = [];
   
   private $defaultimage = "default.png";
+  //private $defaultques = "default-ques.png";
   private $defaultsvg = "default.svg";
   public function __construct()
   {
@@ -144,6 +145,8 @@ class StorageController extends Controller
       
     }else if($type == "default-op"){
 
+      $url =  $this->getlocalpath($this->path['default']).$type.'.png';
+    }else if($type == "default-ques"){
       $url =  $this->getlocalpath($this->path['default']).$type.'.png';
     }
      else {
