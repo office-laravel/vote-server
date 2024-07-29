@@ -28,6 +28,7 @@ use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\Web\PasswordController;
 use App\Http\Controllers\Web\ClientPasswordResetController;
 use App\Http\Controllers\Web\AnswerController;
+ 
 
 //site
 use App\Http\Controllers\HomeController;
@@ -293,7 +294,9 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
         //account
         Route::post('u/delete', [ClientController::class, 'destroy']);
         Route::get('/balanceinfo', [ClientController::class, 'balanceinfo']);
-
+   //vote
+   Route::post('/addvote/{slug}', [AnswerController::class, 'addvote']);
+   Route::get('/voteres/{slug}', [AnswerController::class, 'voteresult']);
         Route::prefix('{lang}')->group(function () {
             //account
             Route::post('/updatepass', [ClientController::class, 'updatepass'])->name('client.updatepass');
@@ -306,6 +309,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
             Route::post('/send', [QuestionController::class, 'sendquiz']);
             Route::post('/checkans', [QuestionController::class, 'checkanswer']);
 
+         
         });
     });
 

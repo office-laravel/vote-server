@@ -4,9 +4,15 @@ namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
 use App\Models\Answer;
+use App\Models\Client;
+use App\Models\AnswersClient;
+use App\Models\Question;
+use App\Models\ClientPoint;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use File;
+
 class AnswerController extends Controller
 {
     /**
@@ -56,19 +62,90 @@ class AnswerController extends Controller
     {
         //
     }
+    public function addvote($slug)
+    {
+        //  $formdata = $request->all();        
+        $client_id = auth()->guard('client')->user()->id;
+        //  $question_id = $formdata['ques'];
+        $answer_id = $slug;
+        // return $slug;
+        $ansmodel = Answer::find($answer_id);
+        $ques = Question::find($ansmodel->question_id);
+        //   $ansclient=AnswersClient::where('client_id',$client_id)->where('answer_id', $answer_id)->first(); 
+        $ques_id = $ques->id;
+        $ansclient = AnswersClient::wherehas('answer', function ($query) use ($ques_id) {
+            $query->where('question_id', $ques_id);
+        })->where('client_id', $client_id)->first();
+        if (!$ansclient) {
 
+            //record the answer
+            $newObj = new AnswersClient();
+
+            $newObj->points = 1;
+            $newObj->client_id = $client_id;
+            $newObj->answer_id = $answer_id;
+            $newObj->answer_content = $ansmodel->content;
+            $newObj->answer_type = $ansmodel->type;
+            $newObj->save();// tem 
+            $client = Client::find($client_id);
+            $client->total_balance += 1;
+            $client->balance += 1;
+            $client->save();
+            //wrong answer
+
+            $newObj->save();
+            $resArr = [
+                'balance' => $client->balance,
+                'result' => 1,
+            ];
+        } else {
+            $resArr = [
+                'balance' => 0,
+                'result' => 0,
+
+            ];
+        }
+        return response()->json($resArr);
+
+    }
+
+    public function voteresult(  $slug)
+    {
+        $question_id = $slug;       
+        return response()->json( $this->resultbyquesid($question_id));      
+    }
+
+    public function resultbyquesid($question_id)
+    {       
+        $clientanslist = AnswersClient::wherehas('answer', function ($query) use ($question_id) {
+            $query->where('question_id', $question_id);
+        })->get();
+        $anslist = Answer::where('question_id', $question_id)->get();
+        $resArr = [];
+        foreach ($anslist as $answer) {
+            $anscount = $clientanslist->where('answer_id', $answer->id)->count();
+            $ansArr = [
+                'answer_id' => $answer->id,
+                'answer_content' => $answer->content,
+                'anscount' => $anscount
+            ];
+
+            $resArr[] = $ansArr;
+        }
+       return $resArr ;
+    }
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy( $id)
+    public function destroy($id)
     {
-      $this->del_answer($id);
+        $this->del_answer($id);
         return redirect()->back();
     }
     public function destroyans($id)
     {
-      $this->del_answer($id);
-      return response()->json("ok"); 
+        $this->del_answer($id);
+        return response()->json("ok");
     }
     public function del_answer($id)
     {
@@ -82,6 +159,6 @@ class AnswerController extends Controller
         }
         return 1;
     }
-    
-    
+
+
 }
