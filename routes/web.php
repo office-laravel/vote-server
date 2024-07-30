@@ -172,6 +172,7 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
         Route::prefix('question')->group(function () {
             Route::post('/update/{id}', [QuestionController::class, 'update'])->name('question.update');
             Route::any('/search', [QuestionController::class, 'search']);
+            Route::get('result/{id}', [QuestionController::class, 'results']);
         });
         Route::prefix('answer')->group(function () {
             Route::post('/destroy/{id}', [AnswerController::class,'destroyans']);

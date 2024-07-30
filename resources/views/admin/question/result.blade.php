@@ -20,13 +20,17 @@
 
         <div class="card-body  row">
             <div class="col-lg-12">
+
                 <form class="form-horizontal" name="create_form" method="POST" action="{{route('question.update', $question->id)}}"
                     enctype="multipart/form-data" id="create_form">
                     @csrf
+                    
+        <div class="  row">
+            <div class="col-lg-8">
                     <div class="form-group row">
                         <div class="col-sm-10">
                             <label for="name" class="col-sm-2 col-form-label">اللغة</label>
-                            <select name="lang_id" id="lang_id" class="form-controll">
+                            <select name="lang_id" id="lang_id" class="form-controll" disabled >
                                 <!--placeholder-->
                                 <option title=""value="0" class="text-muted">اختر اللغة</option>
                                 @foreach ($lang_list as $lang)
@@ -42,7 +46,7 @@
                     <div class="form-group row">
                         <div class="col-sm-10">
                             <label for="name" class="col-sm-2 col-form-label">التصنيف</label>
-                            <select name="category_id" id="category_id" class="form-controll">
+                            <select name="category_id" id="category_id" class="form-controll" disabled>
                                 <!--placeholder-->
                                 <option title=""value="0" class="text-muted">اختر التصنيف</option>
                                 @foreach ($cat_list as $cat)
@@ -57,7 +61,7 @@
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-10">
-                            <label for="type-sel" class="col-sm-2 col-form-label">نوع التصويت</label>
+                            <label for="type-sel" class="col-sm-2 col-form-label" disabled>نوع التصويت</label>
                             <select name="type-sel" id="type" class="form-controll" @disabled(true)>
                                 <!--placeholder-->
                                 <option title=""value="0" class="text-muted">اختر النوع</option>
@@ -72,25 +76,20 @@
 
                         </div>
                     </div>
-                    <div class="form-group">
-                        <!-- <label for="customFile">Custom File</label> -->
-                        <div class="form-group row">
-                            <label for="image" class="col-sm-2 col-form-label">الصورة</label>
-                            <div class="col-sm-10">
+           
 
-                                <div class="custom-file">
-                                    <input type="file" class="custom-file-input" name="image" id="image">
-
-
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                </div>
+                <div class="col-lg-4  sm-3 ">
+                    <img alt="" id="imgshow"
+                        class="rounded img-thumbnail wd-100p float-sm-right  mg-t-10 mg-sm-t-0"
+                        src="{{ $question->image_path }}">
+                </div>
+            </div>
                     <div class="form-group row">
                         <label for="name" class="col-sm-2 col-form-label">نص التصويت</label>
                         <div class="col-sm-10">
                             <input type="text" class="form-controll" name="content" id="content"
-                                placeholder="* نص التصويت" value="{{ $question->content }}">
+                                placeholder="* نص التصويت" value="{{ $question->content }}" disabled>
 
                             <span id="content-error" class="error invalid-feedback"></span>
 
@@ -99,6 +98,7 @@
                    
 
                     @if ($question->type == 'text')
+
                     @php
                     $i = 1;
                  @endphp
@@ -109,74 +109,65 @@
                                 <label class="col-12 col-form-label" style="text-align: right">الخيارات</label>
                             </div>
                        
-                                @foreach ($question->answers as $answer)
+                                @foreach ($result_arr as $answer)
                                     <div class="col-sm-6 col-12 ans-col">
                                         <div class="form-group row">
-                                            <span class="col-sm-1 col-2 num-span">{{ $answer->sequence }}-</span>
-                                            <div class="col-sm-9 col-8">
+                                            <span class="col-sm-1 col-2 num-span">{{$i }}-</span>
+                                            <div class="col-sm-9 col-10">
                                                 <input type="text" class="form-controll inputtxt"
-                                                    name="op_content[{{$answer->sequence }}]"
-                                                    id="op_content-{{ $answer->sequence }}"
-                                                    placeholder="الخيار {{ $answer->sequence }}" value="{{ $answer->content }}">
+                                                    name="op_content[{{$i}}]"
+                                                    id="op_content-{{$i}}"
+                                                    placeholder="الخيار {{ $i }}" value="{{$answer['answer_content'] }}" disabled>
                                             </div>
-                                            <button type="button" onclick="delsort(this);" class="btn-del-op col-sm-1 col-1"
-                                                style="display: block;"><i class="fas fa-times"
-                                                    style="font-size:16px;color:red;"></i>
-                                            </button>
+                                            <span class="col-sm-2 col-2"></span>
+                                            <span class="col-sm-7 col-7" style="padding-right: 60px;">عدد الاصوات:</span>
+                                            <span class="col-sm-3 col-3"><strong>{{$answer['anscount'] }}</strong></span>
+                                        
                                         </div>
                                     </div>
                                     @php
-                                    $i = $answer->sequence;
+                                    $i ++;
                                 @endphp
                                 @endforeach
                         </div>
-
-                        <div class="form-group row text-center">
-
-                            <div class="col-sm-12">
-                                <button type="button" id="btn_add_option" name="btn_add_option"
-                                    class="btn btn-primary ">إضافة خيار</button>
-                            </div>
-                        </div>
+ 
                     </div>
                     @else 
     {{-- image options  style="display: none;" --}}
 
-    <div id="image-container" style="display: none;">
+    <div id="image-container"  >
         <div class="form-group row " id="image-div-container">
             <div class="col-sm-12 col-12">
-                <label class="col-12 col-form-label" style="text-align: right">الخيارات صور</label>
+                <label class="col-12 col-form-label" style="text-align: right">الخيارات </label>
             </div>
 
             @php
                 $i = 1;
             @endphp
-                @foreach ($question->answers as $answer)
+                @foreach ($result_arr as $answer)
                 <div class="col-sm-6 col-md-3 ans-col">
                     <div class="form-group row">
                         <div class="col-sm-12  sm-3 div-op-image ">
-                            <img alt="" id="imgshow-{{ $answer->sequence }}"
+                            <img alt="" id="imgshow-{{ $i}}"
                                 class="rounded img-thumbnail wd-100p float-sm-right  mg-t-10 mg-sm-t-0 imageicon"
-                                src="{{  $answer->image_path }}">
+                                src="{{$answer['image_path']  }}">
                         </div>
-                        <input type="file" accept="image/*" class="custom-file-input input-file-op"
-                            name="img_op[{{ $answer->sequence }}]" id="image-op-{{ $answer->sequence }}"
-                            style="display: none;">
-                        <span class="col-sm-1 col-2 img-num-span">{{$answer->sequence }}-</span>
-                        <div class="col-sm-9 col-8">
+                        
+                        <span class="col-sm-1 col-2  ">{{$i }}-</span>
+                        <div class="col-sm-10 col-10">
                             <input type="text" class="form-controll inputimg"
-                                name="img_op_content[{{ $answer->sequence}}]"
-                                id="img_op_content-{{$answer->sequence }}"
-                                placeholder="الخيار {{$answer->sequence}}" value="{{  $answer->content }}">
+                                name="img_op_content[{{$i}}]"
+                                id="img_op_content-{{$i }}"
+                                placeholder="الخيار {{$i}}" value="{{$answer['answer_content'] }}" disabled>
+                               
                         </div>
-                        <button type="button"   id="ans-{{$answer->id}}" class="btn-del-op col-sm-1 col-1 btn-del-ans"
-                            style="display: block;"><i class="fas fa-times"
-                                style="font-size:16px;color:red;"></i>
-                        </button>
+                         
+                        <span class="col-sm-7 col-8" style="padding-right: 40px;">عدد الاصوات:</span>
+                        <span class="col-sm-3 col-3"><strong>{{$answer['anscount'] }}</strong></span>
                     </div>
                 </div>
                 @php
-                                    $i = $answer->sequence;
+                                    $i++ ;
                                 @endphp
                                 @endforeach
 
@@ -185,8 +176,7 @@
         <div class="form-group row text-center">
 
             <div class="col-sm-12">
-                <button type="button" id="btn_img_add_option" name="btn_img_add_option"
-                    class="btn btn-primary ">إضافة خيار</button>
+               
             </div>
         </div>
     </div>
@@ -196,7 +186,7 @@
                         <label for="status" class="col-sm-2 col-form-label">الحالة</label>
                         <div class="col-sm-10 custom-control custom-switch ">
                             <input type="checkbox" class="custom-control-input" id="status" name="status"
-                            value="{{ $question->status }}" @if ( $question->status=='1') @checked(true) @endif >
+                            value="{{ $question->status }}" @if ( $question->status=='1') @checked(true) @endif disabled >
                             <label class="custom-control-label" for="status" id="status_lbl">الحالة</label>
                             <span id="status-error" class="error invalid-feedback"></span>
                         </div>
@@ -206,64 +196,28 @@
                         <div class="col-sm-2 col-form-label"></div>
                         <div class="col-sm-10">
 
-                            <button type="submit" type="submit" name="btn_save"
-                                class="btn btn-primary btn-submit">تعديل</button>
+                            
 
-                            <a class="btn btn-danger float-right " href="{{ route('question.index') }}">إلغاء</a>
-                            <button id="btn_reset" class="btn btn-default float-right  "
-                                style="margin-right: 20px;margin-left: 20px">إعادة ضبط</button>
+                            <a class="btn btn-danger float-right " href="{{ route('question.index') }}">عودة</a>
+                           
 
                         </div>
                     </div>
                 </form>
             </div>
-
+         
         </div>
 
         </main>
-        <div class="col-sm-6 col-12 ans-col " id="main-op" style="display: none">
-            <div class="form-group row">
-                <span class="col-sm-1 col-2 num-span"></span>
-                <div class="col-sm-9 col-8">
-                    <input type="text" class="form-controll inputtxt" name="" id="" placeholder=""
-                        value="">
-                </div>
-                <button type="button" onclick="delsort(this);" class="btn-del-op col-sm-1 col-1"
-                    style="display: block;"><i class="fas fa-times" style="font-size:16px;color:red;"></i>
-                </button>
-            </div>
-        </div>
+      
 
-        <div class="col-sm-6 col-md-3 ans-col" id="img-main-op" style="display: none">
-            <div class="form-group row">
-                <div class="col-sm-12  sm-3 div-op-image ">
-                    <img alt="" id=""
-                        class="rounded img-thumbnail wd-100p float-sm-right  mg-t-10 mg-sm-t-0 imageicon"
-                        src="{{ $default_op }}">
-                </div>
-                <input type="file" accept="image/*" class="custom-file-input input-file-op" name=""
-                    id="" style="display: none;">
-                <span class="col-sm-1 col-2 img-num-span"></span>
-                <div class="col-sm-9 col-8">
-                    <input type="text" class="form-controll inputimg" name="" id="" placeholder=""
-                        value="">
-                </div>
-                <button type="button" onclick="delimgsort(this);"   class="btn-del-op col-sm-1 col-1"
-                    style="display: block;"><i class="fas fa-times" style="font-size:16px;color:red;"></i>
-                </button>
-            </div>
-        </div>
-        <form name="del_form" id="del_form" method="POST" action="{{url('admin/answer/destroy', "itemid")}}">
-            @csrf
-        </form>
+       
+      
     @endsection
     @section('css')
         <link rel="stylesheet" href="{{ URL::asset('assets/admin/css/content.css') }}">
     @endsection
     @section('js')
-    <script >
-        var i = {{ $i+1 }};
-        var im = {{ $i+1 }};
-    </script>
-        <script src="{{ URL::asset('assets/admin/js/ques-edit.js') }}"></script>
+    
+       
     @endsection

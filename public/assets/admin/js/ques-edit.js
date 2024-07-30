@@ -1,44 +1,34 @@
 var urlval = "";
 
 $(document).ready(function () {
-
 	$('#btn_add_option').on('click', function () {
-
 		var $divclon = $('#main-op').clone().prop('id', 'divoption_' + i).addClass('dynamicdiv').show();
 		var inputsubid='op_content';
-var inpid=inputsubid+'_' + i;
-		// $divclon.children(':input').first().prop('id', inpid)
-		// 	.prop('name', 'op_content' + '[' + i + ']')
-		// 	.prop('value', '') ;
+var inpid=inputsubid+'_' + i;	 
 			$divclon.find('.num-span').html( i+'-');
-		//	$divclon.children(':input').first().attr("placeholder","Placeholder text");
+	 
 		$divclon.find(".inputtxt").attr("placeholder", "الخيار "+i).prop('id', inpid)
 		.prop('name', inputsubid + '[' + i + ']')
 		.prop('value', '');
-		//$('#divoption').after( $divclon);
+	 
 		$('#option-container').append($divclon);
 		i++;
 	});
  //with image
  $('#btn_img_add_option').on('click', function () {
-
 	var $divclon = $('#img-main-op').clone().prop('id', 'divoption_' + im).addClass('dynamicdiv').show();
 	var inputsubid='img_op_content';
 var inpid=inputsubid+'_' + im;
-
-	// $divclon.children(':input').first().prop('id', inpid)
-	// 	.prop('name', 'op_content' + '[' + i + ']')
-	// 	.prop('value', '') ;
+ 
 		$divclon.find('.img-num-span').html( im+'-');
-	//	$divclon.children(':input').first().attr("placeholder","Placeholder text");
+ 
 	$divclon.find(".inputimg").attr("placeholder", "الخيار "+im).prop('id', inpid)
 	.prop('name', inputsubid + '[' + im + ']')
 	.prop('value', '');
 	$divclon.find(".imageicon").prop('id', 'imgshow-' + im);
 
 	$divclon.find(".input-file-op").prop('id', 'image-op-' + im).prop('name', 'img_op' + '[' + im + ']');
-	 
-	//$('#divoption').after( $divclon);
+ 
 	$('#image-div-container').append($divclon);
 	im++;
 });
@@ -49,7 +39,7 @@ var inpid=inputsubid+'_' + im;
 	});
 	//delet one answer
 	$('.btn-del-ans').on('click', function (e) {
-		//e.preventDefault();
+	 
 		var ansid = $(this).attr('id');
 		 var button=$(this);
 		ansid = ansid.replace("ans-","");
@@ -130,11 +120,7 @@ delimg(button);
 			}, error: function (errorresult) {
 				var response = $.parseJSON(errorresult.responseText);
 				noteError();
-				// $.each(response.errors, function (key, val) {
-				// 	$("#" + "info-form-error").append('<li class="text-danger">' + val[0] + '</li>');
-				// 	$("#" + key + "-error").text(val[0]).show();
-				// 	$("#" + key).addClass('parsley-error');
-				// });
+				 
 
 			}, finally: function () {		 
 
@@ -142,33 +128,26 @@ delimg(button);
 		});
 	}
 
-	// $('.imageicon').click(function() {
-	// 	$('#image-op').click();
-	//   });
-// 	$(document).on('click', '.imageicon', function() {
-// 		// This will work!
-//   });
-	   // عند النقر على أي صورة
+ 
 	   $(document).on('click', '.imageicon', function() {
-        // احصل على عنصر الإدخال الملف الأقرب إلى الصورة
+         
         var inputFile = $(this).closest('.form-group').find('.input-file-op');
-
-        // محاكاة النقر على عنصر الإدخال الملف
+ 
         inputFile.click();
     });
 
-    // عندما يتم تغيير ملف الإدخال
+   
 	$(document).on('change', '.input-file-op', function() {
  
-        // احصل على الملف المختار
+         
         var file = this.files[0];
         var imgTag = $(this).closest('.form-group').find('img');
 
-        // استخدم FileReader لعرض الصورة الجديدة
+        
         if (file) {
             var reader = new FileReader();
             reader.onload = function(e) {
-                // عرض الصورة الجديدة
+                
                 imgTag.attr('src', e.target.result);
             }
             reader.readAsDataURL(file);

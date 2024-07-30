@@ -1,11 +1,11 @@
 @extends('admin.layouts.layout')
-@section('breadcrumb')الاسئلة@endsection
+@section('breadcrumb')التصويت@endsection
 @section('content')
 
         <div class="row backgroundW p-4 m-3">
             <div class="container">
                 <div class="form-group btn-create">
-                    <h4>الاسئلة</h4>
+                    <h4>التصويت</h4>
                    <form name="create_form" method="POST" action="{{ url('admin/search') }}"
                    id="s_form">
                    @csrf
@@ -26,7 +26,7 @@
                         <tr>
                             <th scope="col">#</th>
                             {{-- <th scope="col">User</th> --}}
-                            <th scope="col">السؤال</th>
+                            <th scope="col">التصويت</th>
                             <th scope="col">اللغة</th>
                             <th scope="col">التصنيف </th>
                             <th scope="col">الحالة</th>
@@ -62,6 +62,10 @@
                                                     <i class="fa-solid fa-trash"></i></a>                                                    
                                                 </a>
                                             </form> 
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <a href="{{url('admin/question/result', $ques->id)}}"><i title="النتائج"
+                                                    class="fa-solid fa-info"></i></a>
                                         </div>
                                     </div>
                                 </td>

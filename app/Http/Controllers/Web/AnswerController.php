@@ -134,6 +134,31 @@ class AnswerController extends Controller
         }
        return $resArr ;
     }
+
+    public function resultwithimg($question_id)
+    {       
+        $clientanslist = AnswersClient::wherehas('answer', function ($query) use ($question_id) {
+            $query->where('question_id', $question_id);
+        })->get();
+        $anslist = Answer::where('question_id', $question_id)->get();
+        $resArr = [];
+        foreach ($anslist as $answer) {
+            $anscount = $clientanslist->where('answer_id', $answer->id)->count();
+
+            $ansArr = [
+                'answer_id' => $answer->id,
+                'answer_content' => $answer->content,
+                'anscount' => $anscount,
+                'image_path' => $answer->image_path,
+                'sequence'=> $answer->sequence,
+            ];
+
+            $resArr[] = $ansArr;
+        }
+      $resArr=collect($resArr)->sortBy('anscount')->reverse()->toArray();
+      //  $resArr=collect($resArr)->sortBy('count')->toArray();
+       return $resArr ;
+    }
     /**
      * Remove the specified resource from storage.
      */

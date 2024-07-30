@@ -414,55 +414,68 @@ if($files!=null){
     }
         }
     }
-
-    
-    public function sendquiz(SendQuesRequest $request, $lang)
+    public function results($id)
     {
-        $formdata = $request->all();
-        $validator = Validator::make(
-            $formdata,
-            $request->rules(),
-            $request->messages()
-        );
+        $item = Question::with('answers')->find($id);
 
-        if ($validator->fails()) {
-            return response()->json($validator);
-        } else {
-
-            $client_id = auth()->guard('client')->user()->id;
-            $category_id = $formdata['cat'];
-            $lang_id = $formdata['lang'];
-            $catmodel = Category::find($category_id);
-
-            if ($catmodel->notes == 'general') {
-
-                $queslist = Question::where('lang_id', $lang_id)
-                    ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id, $category_id) {
-                        $query->where('client_id', $client_id)//->where('category_id',$category_id)//if we want not repeat ques from other cat
-                        ;
-                    })->select('id')->pluck('id');
-
-            } else {
-
-                $queslist = Question::where(['category_id' => $category_id, 'lang_id' => $lang_id])
-                    ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id) {
-                        $query->where('client_id', $client_id);
-                    })->select('id')->pluck('id');
-            }
-
-            if ($queslist->count() > 0) {
-
-                $randid = Arr::random($queslist->toArray());
-                $ques = Question::with('answers')->find($randid);
-                $quesmaped = $this->quesmap($ques);
-
-            } else {
-                $quesmaped = [];
-            }
-
-            return response()->json($quesmaped);
-        }
+        $lang_list = Language::orderByDesc('is_default')->get();
+        $cat_list = Category::where('code', 'ques')->orderBy('title')->get();
+        $strgCtrlr = new StorageController();
+        $answercntrlr=new AnswerController();
+       $resArr= $answercntrlr->resultwithimg($id);
+        $def_op = $strgCtrlr->DefaultPath('default-op');
+        return view("admin.question.result", ["question" => $item, "lang_list" => $lang_list, 'cat_list' => $cat_list, 'default_op' => $def_op
+    ,'result_arr'=> $resArr
+    ]);
     }
+    
+    // public function sendquiz(SendQuesRequest $request, $lang)
+    // {
+    //     $formdata = $request->all();
+    //     $validator = Validator::make(
+    //         $formdata,
+    //         $request->rules(),
+    //         $request->messages()
+    //     );
+
+    //     if ($validator->fails()) {
+    //         return response()->json($validator);
+    //     } else {
+
+    //         $client_id = auth()->guard('client')->user()->id;
+    //         $category_id = $formdata['cat'];
+    //         $lang_id = $formdata['lang'];
+    //         $catmodel = Category::find($category_id);
+
+    //         if ($catmodel->notes == 'general') {
+
+    //             $queslist = Question::where('lang_id', $lang_id)
+    //                 ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id, $category_id) {
+    //                     $query->where('client_id', $client_id)//->where('category_id',$category_id)//if we want not repeat ques from other cat
+    //                     ;
+    //                 })->select('id')->pluck('id');
+
+    //         } else {
+
+    //             $queslist = Question::where(['category_id' => $category_id, 'lang_id' => $lang_id])
+    //                 ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id) {
+    //                     $query->where('client_id', $client_id);
+    //                 })->select('id')->pluck('id');
+    //         }
+
+    //         if ($queslist->count() > 0) {
+
+    //             $randid = Arr::random($queslist->toArray());
+    //             $ques = Question::with('answers')->find($randid);
+    //             $quesmaped = $this->quesmap($ques);
+
+    //         } else {
+    //             $quesmaped = [];
+    //         }
+
+    //         return response()->json($quesmaped);
+    //     }
+    // }
 
 
     public function quesmap(Question $ques)
@@ -482,158 +495,158 @@ if($files!=null){
         return $quesArr;
     }
 
-    public function checkanswer(CheckAnsRequest $request, $lang)
-    {
+    // public function checkanswer(CheckAnsRequest $request, $lang)
+    // {
 
-        // CheckAnsRequest
-        $formdata = $request->all();
-        $validator = Validator::make(
-            $formdata,
-            $request->rules(),
-            $request->messages()
-        );
-        if ($validator->fails()) {
-            return response()->json($validator);
-        } else {
-            $client_id = auth()->guard('client')->user()->id;
-            $question_id = $formdata['ques'];
-            $answer_id = $formdata['ans'];
-            $category_id = $formdata['cat'];
-            $ansmodel = Answer::where(['id' => $answer_id, 'question_id' => $question_id])->first();
-            $anscorrect = Answer::where(['is_correct' => 1, 'question_id' => $question_id])->first();
-            $giftpoints = 0;
-            $notifylevel = 0;
-            $levelnum = 0;
-            if ($ansmodel) {
-                //record the answer
-                $newObj = new AnswersClient();
-                $newObj->is_correct = $ansmodel->is_correct;
-                $newObj->points = $ansmodel->is_correct == 1 ? 1 : 0;
-                $newObj->client_id = $client_id;
-                $newObj->answer_id = $answer_id;
-                $newObj->category_id = $category_id;
-                // $newObj->level_id = ;
-                //  $newObj->question_content ='';
-                $newObj->answer_content = $ansmodel->content;
-                // $newObj->question_type = $formdata['question_type'];
-                $newObj->answer_type = $ansmodel->type;
-                // $newObj->question_file = $formdata['question_file'];
-                // $newObj->answer_file = $formdata['answer_file'];
-                $newObj->save();// tem 
-                $client = Client::find($client_id);
+    //     // CheckAnsRequest
+    //     $formdata = $request->all();
+    //     $validator = Validator::make(
+    //         $formdata,
+    //         $request->rules(),
+    //         $request->messages()
+    //     );
+    //     if ($validator->fails()) {
+    //         return response()->json($validator);
+    //     } else {
+    //         $client_id = auth()->guard('client')->user()->id;
+    //         $question_id = $formdata['ques'];
+    //         $answer_id = $formdata['ans'];
+    //         $category_id = $formdata['cat'];
+    //         $ansmodel = Answer::where(['id' => $answer_id, 'question_id' => $question_id])->first();
+    //         $anscorrect = Answer::where(['is_correct' => 1, 'question_id' => $question_id])->first();
+    //         $giftpoints = 0;
+    //         $notifylevel = 0;
+    //         $levelnum = 0;
+    //         if ($ansmodel) {
+    //             //record the answer
+    //             $newObj = new AnswersClient();
+    //             $newObj->is_correct = $ansmodel->is_correct;
+    //             $newObj->points = $ansmodel->is_correct == 1 ? 1 : 0;
+    //             $newObj->client_id = $client_id;
+    //             $newObj->answer_id = $answer_id;
+    //             $newObj->category_id = $category_id;
+    //             // $newObj->level_id = ;
+    //             //  $newObj->question_content ='';
+    //             $newObj->answer_content = $ansmodel->content;
+    //             // $newObj->question_type = $formdata['question_type'];
+    //             $newObj->answer_type = $ansmodel->type;
+    //             // $newObj->question_file = $formdata['question_file'];
+    //             // $newObj->answer_file = $formdata['answer_file'];
+    //             $newObj->save();// tem 
+    //             $client = Client::find($client_id);
 
-                $clpointmodel = ClientPoint::where('client_id', $client_id)->where('category_id', $category_id)->orderByDesc('created_at')->first();
-                if ($ansmodel->is_correct == 1) {
-                    // correct answer
-                    $client->balance = $client->balance + 1;
-                    $client->total_balance = $client->total_balance + 1;
-                    // level check.
-                    //get category
-                    //check if ClientPoint level exist
-                    if ($clpointmodel) {
-                        $clpointmodel->points_sum = $clpointmodel->points_sum + 1;
-                        $clpointmodel->save();
-                        $currentlevel = Level::find($clpointmodel->level_id);
-                        //save level id in AnswersClient record
-                        $newObj->level_id = $clpointmodel->level_id;
-                        $newObj->save();
-                        $nextlevelval = $currentlevel->value + 1;
-                        $nextlevel = Level::where('value', $nextlevelval)->first();
-                        if ($nextlevel) {
-                            // next level exist
-                            if ($clpointmodel->points_sum >= $nextlevel->answers_count) {
-                                //move to next level
-                                //add new record
-                                $client->balance = $client->balance + $nextlevel->points;
-                                $client->total_balance = $client->total_balance + $nextlevel->points;
-                                $newCpObj = new ClientPoint();
-                                $newCpObj->points_sum = 0;
-                                $newCpObj->gift_sum = $nextlevel->points;
-                                $newCpObj->category_id = $category_id;
-                                $newCpObj->client_id = $client_id;
-                                $newCpObj->level_id = $nextlevel->id;
-                                $newCpObj->save();
-                                //add answerclient record for gift
-                                $giftObj = new AnswersClient();
-                                $giftObj->is_correct = 1;
-                                $giftObj->points = $nextlevel->points;
-                                $giftObj->client_id = $client_id;
-                                // $newObj->answer_id = $answer_id;
-                                $giftObj->category_id = $category_id;
-                                $giftObj->level_id = $nextlevel->id;
-                                $giftObj->question_type = 'gift';
-                                $giftObj->save();
+    //             $clpointmodel = ClientPoint::where('client_id', $client_id)->where('category_id', $category_id)->orderByDesc('created_at')->first();
+    //             if ($ansmodel->is_correct == 1) {
+    //                 // correct answer
+    //                 $client->balance = $client->balance + 1;
+    //                 $client->total_balance = $client->total_balance + 1;
+    //                 // level check.
+    //                 //get category
+    //                 //check if ClientPoint level exist
+    //                 if ($clpointmodel) {
+    //                     $clpointmodel->points_sum = $clpointmodel->points_sum + 1;
+    //                     $clpointmodel->save();
+    //                     $currentlevel = Level::find($clpointmodel->level_id);
+    //                     //save level id in AnswersClient record
+    //                     $newObj->level_id = $clpointmodel->level_id;
+    //                     $newObj->save();
+    //                     $nextlevelval = $currentlevel->value + 1;
+    //                     $nextlevel = Level::where('value', $nextlevelval)->first();
+    //                     if ($nextlevel) {
+    //                         // next level exist
+    //                         if ($clpointmodel->points_sum >= $nextlevel->answers_count) {
+    //                             //move to next level
+    //                             //add new record
+    //                             $client->balance = $client->balance + $nextlevel->points;
+    //                             $client->total_balance = $client->total_balance + $nextlevel->points;
+    //                             $newCpObj = new ClientPoint();
+    //                             $newCpObj->points_sum = 0;
+    //                             $newCpObj->gift_sum = $nextlevel->points;
+    //                             $newCpObj->category_id = $category_id;
+    //                             $newCpObj->client_id = $client_id;
+    //                             $newCpObj->level_id = $nextlevel->id;
+    //                             $newCpObj->save();
+    //                             //add answerclient record for gift
+    //                             $giftObj = new AnswersClient();
+    //                             $giftObj->is_correct = 1;
+    //                             $giftObj->points = $nextlevel->points;
+    //                             $giftObj->client_id = $client_id;
+    //                             // $newObj->answer_id = $answer_id;
+    //                             $giftObj->category_id = $category_id;
+    //                             $giftObj->level_id = $nextlevel->id;
+    //                             $giftObj->question_type = 'gift';
+    //                             $giftObj->save();
 
-                                $giftpoints = $nextlevel->points;
-                                $notifylevel = 1;
-                                $levelnum = $nextlevel->value;
-                            }
-                        } else {
-                            //no next level
-                            $notifylevel = 2;
-                        }
-                    } else {
-                        $newCpObj = new ClientPoint();
-                        //level0
-                        $currentlevel = Level::orderBy('value')->first();
-                        $client->balance = $client->balance + $currentlevel->points;
-                        $client->total_balance = $client->total_balance + $currentlevel->points;
-                        $newCpObj->points_sum = 1;
-                        $newCpObj->gift_sum = $currentlevel->points;
-                        $newCpObj->category_id = $category_id;
-                        $newCpObj->client_id = $client_id;
-                        $newCpObj->level_id = $currentlevel->id;
-                        $newCpObj->save();
-                        //save level id in AnswersClient record
-                        $newObj->level_id = $currentlevel->id;
-                        $newObj->save();
-                        if ($currentlevel->points > 0) {
-                            $notifylevel = 1;
-                            //add answerclient record for gift
-                            $giftObj = new AnswersClient();
-                            $giftObj->is_correct = 1;
-                            $giftObj->points = $currentlevel->points;
-                            $giftObj->client_id = $client_id;
+    //                             $giftpoints = $nextlevel->points;
+    //                             $notifylevel = 1;
+    //                             $levelnum = $nextlevel->value;
+    //                         }
+    //                     } else {
+    //                         //no next level
+    //                         $notifylevel = 2;
+    //                     }
+    //                 } else {
+    //                     $newCpObj = new ClientPoint();
+    //                     //level0
+    //                     $currentlevel = Level::orderBy('value')->first();
+    //                     $client->balance = $client->balance + $currentlevel->points;
+    //                     $client->total_balance = $client->total_balance + $currentlevel->points;
+    //                     $newCpObj->points_sum = 1;
+    //                     $newCpObj->gift_sum = $currentlevel->points;
+    //                     $newCpObj->category_id = $category_id;
+    //                     $newCpObj->client_id = $client_id;
+    //                     $newCpObj->level_id = $currentlevel->id;
+    //                     $newCpObj->save();
+    //                     //save level id in AnswersClient record
+    //                     $newObj->level_id = $currentlevel->id;
+    //                     $newObj->save();
+    //                     if ($currentlevel->points > 0) {
+    //                         $notifylevel = 1;
+    //                         //add answerclient record for gift
+    //                         $giftObj = new AnswersClient();
+    //                         $giftObj->is_correct = 1;
+    //                         $giftObj->points = $currentlevel->points;
+    //                         $giftObj->client_id = $client_id;
 
-                            $giftObj->category_id = $category_id;
-                            $giftObj->level_id = $currentlevel->id;
-                            $giftObj->question_type = 'gift';
-                            $giftObj->save();
-                        }
-                        $giftpoints = $currentlevel->points;
-                        $levelnum = $currentlevel->value;
-                    }
-                    $client->save();
-                    //end level check                    
-                    $resArr = [
-                        'balance' => $client->balance,
-                        'result' => 1,
-                        'correct_ans' => $anscorrect->id,
-                        'notifylevel' => $notifylevel,
-                        'giftpoints' => $giftpoints,
-                        'levelnum' => $levelnum,
-                    ];
-                } else {
-                    //wrong answer
-                    if ($clpointmodel) {
-                        $currentlevel = Level::orderBy('value')->first();
-                        $newObj->level_id = $currentlevel->id;
-                    } else {
-                        $newObj->level_id = $clpointmodel->level_id;
-                    }
-                    $newObj->save();
-                    $resArr = [
-                        'balance' => $client->balance,
-                        'result' => 0,
-                        'correct_ans' => $anscorrect->id,
-                        'notifylevel' => $notifylevel,
-                        // 'giftpoints'=>$giftpoints,
-                    ];
-                }
-            }
-            return response()->json($resArr);
-        }
-    }
+    //                         $giftObj->category_id = $category_id;
+    //                         $giftObj->level_id = $currentlevel->id;
+    //                         $giftObj->question_type = 'gift';
+    //                         $giftObj->save();
+    //                     }
+    //                     $giftpoints = $currentlevel->points;
+    //                     $levelnum = $currentlevel->value;
+    //                 }
+    //                 $client->save();
+    //                 //end level check                    
+    //                 $resArr = [
+    //                     'balance' => $client->balance,
+    //                     'result' => 1,
+    //                     'correct_ans' => $anscorrect->id,
+    //                     'notifylevel' => $notifylevel,
+    //                     'giftpoints' => $giftpoints,
+    //                     'levelnum' => $levelnum,
+    //                 ];
+    //             } else {
+    //                 //wrong answer
+    //                 if ($clpointmodel) {
+    //                     $currentlevel = Level::orderBy('value')->first();
+    //                     $newObj->level_id = $currentlevel->id;
+    //                 } else {
+    //                     $newObj->level_id = $clpointmodel->level_id;
+    //                 }
+    //                 $newObj->save();
+    //                 $resArr = [
+    //                     'balance' => $client->balance,
+    //                     'result' => 0,
+    //                     'correct_ans' => $anscorrect->id,
+    //                     'notifylevel' => $notifylevel,
+    //                     // 'giftpoints'=>$giftpoints,
+    //                 ];
+    //             }
+    //         }
+    //         return response()->json($resArr);
+    //     }
+    // }
     /**
      * Remove the specified resource from storage.
      */
