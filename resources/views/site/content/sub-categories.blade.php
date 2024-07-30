@@ -23,7 +23,7 @@
            @endif  
 
         @forelse ($questions as $question)
-        
+               
           <div class="col-6 col-sm-4 col-md-3 col-lg-6 mb-4 p-1">
             <a href="{{ url($lang.'/vote',$question->id) }}" class="category-link">
               <div class="category-card">

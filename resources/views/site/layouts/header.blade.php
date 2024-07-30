@@ -58,7 +58,7 @@
               <div class="dropdown-menu" aria-labelledby="languageDropdown">
                 @foreach ( $transarr['langs']->skip(1) as $langrow )
                 @if (isset($catquis)) 
-                <a class="dropdown-item" href="{{route(\Illuminate\Support\Facades\Route::currentRouteName(),['lang' => $langrow->code,'slug'=>$catquis['slug']])}}">         
+                {{-- <a class="dropdown-item" href="{{route(\Illuminate\Support\Facades\Route::currentRouteName(),['lang' => $langrow->code,'slug'=>$catquis['slug']])}}">          --}}
                   @elseif (isset($page))
                   <a class="dropdown-item" href="{{route(\Illuminate\Support\Facades\Route::currentRouteName(),['lang' => $langrow->code,'slug'=>$page['slug']])}}">                    
                   @else

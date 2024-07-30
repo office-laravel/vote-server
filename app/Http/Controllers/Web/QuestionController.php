@@ -414,6 +414,8 @@ if($files!=null){
     }
         }
     }
+
+    
     public function sendquiz(SendQuesRequest $request, $lang)
     {
         $formdata = $request->all();
@@ -422,29 +424,38 @@ if($files!=null){
             $request->rules(),
             $request->messages()
         );
+
         if ($validator->fails()) {
             return response()->json($validator);
         } else {
+
             $client_id = auth()->guard('client')->user()->id;
             $category_id = $formdata['cat'];
             $lang_id = $formdata['lang'];
             $catmodel = Category::find($category_id);
+
             if ($catmodel->notes == 'general') {
+
                 $queslist = Question::where('lang_id', $lang_id)
                     ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id, $category_id) {
                         $query->where('client_id', $client_id)//->where('category_id',$category_id)//if we want not repeat ques from other cat
                         ;
                     })->select('id')->pluck('id');
+
             } else {
+
                 $queslist = Question::where(['category_id' => $category_id, 'lang_id' => $lang_id])
                     ->whereDoesntHave('answers.answersclients', function ($query) use ($client_id) {
                         $query->where('client_id', $client_id);
                     })->select('id')->pluck('id');
             }
+
             if ($queslist->count() > 0) {
+
                 $randid = Arr::random($queslist->toArray());
                 $ques = Question::with('answers')->find($randid);
                 $quesmaped = $this->quesmap($ques);
+
             } else {
                 $quesmaped = [];
             }
@@ -452,6 +463,8 @@ if($files!=null){
             return response()->json($quesmaped);
         }
     }
+
+
     public function quesmap(Question $ques)
     {
         $answers = $ques->answers->map(function ($answer) {
