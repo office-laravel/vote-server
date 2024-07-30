@@ -28,12 +28,6 @@
                       <label>{{ $answer->content }}</label>
                       <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
                   </div>
-
-
-
-                 
-
-
               </div>
               
 
@@ -65,19 +59,17 @@
     </div>
 
 @endsection
+@section('css')
+ 
+<link rel="stylesheet" href="{{ url('assets/site/css/w3.css') }}" />
+@endsection
+
 @section('js')
-
-
-
-
-
-
 <script>
   var quesid ='{{ $catquis->id }}';
     $(document).ready(function() {
         $('.answer-option').on('click', function() {
-            var answerId = $(this).val();
-    
+            var answerId = $(this).val();    
             // إرسال ID الجواب إلى الخادم باستخدام AJAX
             $.ajax({
                 url: '/addvote/'+answerId,
@@ -105,20 +97,11 @@
         });
 
         function loadresults() {
-
-  
-        
-
-
-// إرسال ID الجواب إلى الخادم باستخدام AJAX
+          // إرسال ID الجواب إلى الخادم باستخدام AJAX
 $.ajax({
     url: '/voteres/'+quesid,
-    method: 'GET',
- 
-    success: function(response) {
-      
-      
-        
+    method: 'GET', 
+    success: function(response) {       
         // عرض نسبة الإجابات
         $('#results').html(response); 
    
@@ -129,23 +112,11 @@ $.ajax({
         alert('error');
     }
 });
-
-
-
 }
     });
   </script>  
-
-
-
-
-
-  <script src="{{ url('assets/site/js/sweetalert.min.js') }}"></script>
-  
-  {{-- <script src="{{ url('assets/site/js/quiz.js') }}"></script> --}}
-  
-  <script>
-
-  </script>
+  <script src="{{ url('assets/site/js/sweetalert.min.js') }}"></script>  
+  {{-- <script src="{{ url('assets/site/js/quiz.js') }}"></script> --}}  
+   
 
 @endsection

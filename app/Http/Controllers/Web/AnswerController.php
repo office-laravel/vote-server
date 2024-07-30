@@ -109,14 +109,14 @@ class AnswerController extends Controller
 
     }
 
-    public function voteresult(  $slug)
+    public function voteresult($slug)
     {
-        $question_id = $slug;       
-        return response()->json( $this->resultbyquesid($question_id));      
+        $question_id = $slug;
+        return response()->json($this->resultbyquesid($question_id));
     }
 
     public function resultbyquesid($question_id)
-    {       
+    {
         $clientanslist = AnswersClient::wherehas('answer', function ($query) use ($question_id) {
             $query->where('question_id', $question_id);
         })->get();
@@ -132,11 +132,11 @@ class AnswerController extends Controller
 
             $resArr[] = $ansArr;
         }
-       return $resArr ;
+        return $resArr;
     }
 
     public function resultwithimg($question_id)
-    {       
+    {
         $clientanslist = AnswersClient::wherehas('answer', function ($query) use ($question_id) {
             $query->where('question_id', $question_id);
         })->get();
@@ -150,14 +150,40 @@ class AnswerController extends Controller
                 'answer_content' => $answer->content,
                 'anscount' => $anscount,
                 'image_path' => $answer->image_path,
-                'sequence'=> $answer->sequence,
+                'sequence' => $answer->sequence,
+                'percent' => 0,
             ];
-
-            $resArr[] = $ansArr;
+             $resArr[] = $ansArr;
         }
-      $resArr=collect($resArr)->sortBy('anscount')->reverse()->toArray();
-      //  $resArr=collect($resArr)->sortBy('count')->toArray();
-       return $resArr ;
+        $resArr = $this->calcpercent($resArr);
+        $resArr = collect($resArr)->sortBy('anscount')->reverse()->toArray();
+        //  $resArr=collect($resArr)->sortBy('count')->toArray();
+        return $resArr;
+    }
+    public function calcpercent($resArr)
+    {
+        $itemscount = collect($resArr)->where('anscount', '>', 0)->sum('anscount');
+        $maiArr = [];
+        if ($itemscount > 0) {
+            foreach ($resArr as $answer) {
+                //calc percent
+                $perc =  round(($answer['anscount'] * 100) / $itemscount,1);
+
+                $ansArr = [
+                    'answer_id' => $answer['answer_id'],
+                    'answer_content' => $answer['answer_content'],
+                    'anscount' => $answer['anscount'],
+                    'image_path' => $answer['image_path'],
+                    'sequence' => $answer['sequence'],
+                    'percent' => $perc,
+                ];
+                $maiArr[] = $ansArr;
+            }
+        } else {
+            $maiArr = $resArr;
+        }
+        return $maiArr;
+
     }
     /**
      * Remove the specified resource from storage.

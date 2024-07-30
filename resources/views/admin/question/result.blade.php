@@ -122,7 +122,7 @@
                                             <span class="col-sm-2 col-2"></span>
                                             <span class="col-sm-7 col-7" style="padding-right: 60px;">عدد الاصوات:</span>
                                             <span class="col-sm-3 col-3"><strong>{{$answer['anscount'] }}</strong></span>
-                                        
+                                            <label style="padding-right: 60px;">النسبة: <strong>{{ $answer['percent'] }} %</strong></label>
                                         </div>
                                     </div>
                                     @php
@@ -164,6 +164,8 @@
                          
                         <span class="col-sm-7 col-8" style="padding-right: 40px;">عدد الاصوات:</span>
                         <span class="col-sm-3 col-3"><strong>{{$answer['anscount'] }}</strong></span>
+                        
+                        <label style="padding-right: 40px;">النسبة: <strong>{{ $answer['percent'] }} %</strong></label>
                     </div>
                 </div>
                 @php
@@ -195,9 +197,6 @@
                     <div class="form-group row">
                         <div class="col-sm-2 col-form-label"></div>
                         <div class="col-sm-10">
-
-                            
-
                             <a class="btn btn-danger float-right " href="{{ route('question.index') }}">عودة</a>
                            
 

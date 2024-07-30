@@ -1,35 +1,41 @@
-
-
-
-
                 <div class="row">
-                    @foreach ($results as $answer)
-                    @if($type == 'image')
-
-                    <div class="col-12 col-md-4 " data-answer-id="{{ $answer['answer_id'] }}">
-                        <div>
-                            <img src="{{ asset($answer['image_path']) }}" alt="" style="width: 200px; height: 200px;">
-                        </div>
-                        <hr>
-                        <div>
-                            <label>{{ $answer['answer_content'] }}</label>
-                            {{-- <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}"> --}}
-                        </div>
-
-                        <div id="results"></div>
-                    </div>
-                    
+                    @if ($type == 'image')
+                        @foreach ($results as $answer)
+                            <div class="col-12 col-md-4 " data-answer-id="{{ $answer['answer_id'] }}">
+                                <div>
+                                    <img src="{{ asset($answer['image_path']) }}" alt=""
+                                        style="width: 200px; height: 200px;">
+                                </div>
+                                <hr>
+                                <div>
+                                    <label class="col-12">{{ $answer['answer_content'] }}</label>
+                                    
+                                    <div class="row">
+                                        <div class="  col-10" style="padding-left: 4px;">
+                                            <div class="w3-border ">
+                                                <div class="w3-grey"
+                                                    style="background-color:#0866FF !important  ;color:#F0F2F5 !important;text-align: center; height:24px;width:{{ $answer['percent'] }}%">
+                                                    {{ $answer['percent'] }}%
+                                                </div>
+                                                   
+                                            </div>
+                                        </div>
+                                        <div style="background-color: #F0F2F5;padding: 0px 4px; border-radius: 4px;" >
+                                            {{ $answer['anscount'] }}
+                                        </div>
+                                    </div>
+                                    {{-- <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}"> --}}
+                                </div>
+                            </div>
+                        @endforeach
                     @else
-                        <div class="col-12">
-                            <label>{{ $answer['answer_content'] }}</label>
-                            {{-- <input name="answer" type="radio" value=""> --}}
-                        </div>
-
-                        <div id="results"></div>
+                        @foreach ($results as $answer)
+                            <div class="col-12">
+                                <label>{{ $answer['answer_content'] }}</label>
+                                <label>العدد:{{ $answer['anscount'] }}</label>
+                                <label>النسبة:{{ $answer['percent'] }}</label>
+                                {{-- <input name="answer" type="radio" value=""> --}}
+                            </div>
+                        @endforeach
                     @endif
-                    @endforeach
                 </div>
-
-       
-
-
