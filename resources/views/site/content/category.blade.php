@@ -16,51 +16,136 @@
               {{ $catquis->content }}
             </div> <br>
 
-            <div class="row">
+            <div class="row answer-main">
+              @if($catquis->type == 'image')
               @foreach ($catquis->answers as $answer)
-                @if($answer->type == 'image')
+                         <div class="col-12 col-md-4 " data-answer-id="{{ $answer->id }}">
+                  <div>
+                      <img src="{{ asset($answer->image_path) }}" alt="" style="width: 200px; height: 200px;">
+                  </div>
+                  <hr>
+                  <div>
+                      <label>{{ $answer->content }}</label>
+                      <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
+                  </div>
 
-                  <div class="col-12 col-md-4">
+
+
+                 
+
+
+              </div>
+              
+
+                  {{-- <div class="col-12 col-md-4">
                     <div> <img src="{{ $answer->image_path }}" alt="" style="width: 200px; height: 200px;"> </div>
                     <hr>
                     <div>
                       <label>{{ $answer->content }}</label>
-                      <input name="answer" type="radio" value="">
+                      <input name="answer" type="radio" value="{{ $answer->id }}">
                     </div>
-                  </div>
-                 
-                @else
-
-                  <div class="col-12">
-                    <label>{{ $answer->content }}</label>
-                    <input name="answer" type="radio" value="">
-                  </div>
-
-                @endif
+                  </div> --}}
+                    
               @endforeach
-            </div>
 
+                @else
+                @foreach ($catquis->answers as $answer)
+              <div class="col-12">
+                <label>{{ $answer->content }}</label>
+                <input name="answer" type="radio" value="">
+              </div>
+              @endforeach
+
+              @endif
+             
+            </div>
+            <div id="results"></div>
         </main>
       </div>
     </div>
 
 @endsection
 @section('js')
+
+
+
+
+
+
+<script>
+  var quesid ='{{ $catquis->id }}';
+    $(document).ready(function() {
+        $('.answer-option').on('click', function() {
+            var answerId = $(this).val();
+    
+            // إرسال ID الجواب إلى الخادم باستخدام AJAX
+            $.ajax({
+                url: '/addvote/'+answerId,
+                method: 'POST',
+                data: {
+                   // answer_id: answerId,
+                    _token: '{{ csrf_token() }}' 
+                },
+                success: function(response) {
+                  if(response.result==1 || response.result==0 ){
+                    // إخفاء الخيارات
+                    $('.answer-main').hide();
+                    
+                    loadresults();
+                  }else{
+                    alert('error1');
+                  }
+                 
+                },
+                error: function(xhr) {
+                    console.log(xhr.responseText);
+                    alert('error');
+                }
+            });
+        });
+
+        function loadresults() {
+
+  
+        
+
+
+// إرسال ID الجواب إلى الخادم باستخدام AJAX
+$.ajax({
+    url: '/voteres/'+quesid,
+    method: 'GET',
+ 
+    success: function(response) {
+      
+      
+        
+        // عرض نسبة الإجابات
+        $('#results').html(response); 
+   
+     
+    },
+    error: function(xhr) {
+        console.log(xhr.responseText);
+        alert('error');
+    }
+});
+
+
+
+}
+    });
+  </script>  
+
+
+
+
+
   <script src="{{ url('assets/site/js/sweetalert.min.js') }}"></script>
   
-  <script src="{{ url('assets/site/js/quiz.js') }}"></script>
+  {{-- <script src="{{ url('assets/site/js/quiz.js') }}"></script> --}}
   
   <script>
-    var correct_answer= "{{$sitedataCtrlr->gettrans($quiz,'correct-answer')}}";
-    var wrong_answer="{{$sitedataCtrlr->gettrans($quiz,'wrong-answer')}}";
-    var nextlevel_msg="{{$sitedataCtrlr->gettrans($quiz,'nextlevel-msg')}}";
-    var no_questions="{{$sitedataCtrlr->gettrans($quiz,'no-questions')}}";
 
-    var cat={{ $catquis['id'] }};
-
-    $(document).ready(function() {
-      
-      
-    });
   </script>
+
 @endsection

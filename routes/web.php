@@ -301,8 +301,8 @@ Route::middleware(['auth:web', 'verified'])->prefix('admin')->group(function () 
         Route::get('/balanceinfo', [ClientController::class, 'balanceinfo']);
         //vote
         Route::post('/addvote/{slug}', [AnswerController::class, 'addvote']);
-        Route::get('/voteres/{slug}', [AnswerController::class, 'voteresult']);
-        
+        Route::get('/voteres/{id}', [HomeController::class, 'get_vote_results']);
+      //  Route::get('/voteres/{slug}', [AnswerController::class, 'voteresult']);
         Route::prefix('{lang}')->group(function () {
             //account
             Route::post('/updatepass', [ClientController::class, 'updatepass'])->name('client.updatepass');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Web\AnswerController;
 use App\Models\Category;
 use App\Models\Question;
 
@@ -186,9 +187,6 @@ class HomeController extends Controller
 
    public function getques($lang, $slug)
    {
-      // $questions = Question::where('category_id', 36)->get();
-
-      // return dd($questions);
 
       $sitedctrlr=new SiteDataController();   
 
@@ -203,6 +201,18 @@ class HomeController extends Controller
 
       return view('site.content.category',['catquis'=>$cat,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang 
       ,'quiz'=>$quiz,'sitedataCtrlr'=>$sitedctrlr]);   
+   }
+
+
+
+   public function get_vote_results($id)
+   {
+      $ques=Question::find($id);
+      $type=$ques->type;
+      $answer_controller = new AnswerController();
+      $result=  $answer_controller->resultwithimg($id);
+      
+      return view('site.content.result',['results'=>$result,'type'=>$type]);
    }
 
 
