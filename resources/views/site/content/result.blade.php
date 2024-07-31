@@ -39,7 +39,7 @@
                                 <div class="row">
                                     <div class="col-10" style="padding-left: 4px;">
                                         <div class="w3-border ">
-                                            <div class="w3-grey" id="percent"
+                                            <div class="w3-grey percent" 
                                                 style="width:{{ $answer['percent'] }}%">
                                                 {{ $answer['percent'] }}%
                                             </div>

@@ -35,8 +35,8 @@
                                 <div class="row">
                                     <div class="col-10" style="padding-left: 4px;">
                                         <div class="w3-border">
-                                            <div class="w3-grey" id="percent"
-                                                style="width:{{ $answer['percent'] }}%">
+                                            <div class="w3-grey percent"  
+                                                style=" width:{{ $answer['percent'] }}%">
                                                 {{ $answer['percent'] }}%
                                             </div>
                                               
@@ -60,7 +60,7 @@
                             <div class="row">
                                 <div class="col-10" style="padding-left: 4px;">
                                     <div class="w3-border ">
-                                        <div class="w3-grey" id="percent"
+                                        <div class="w3-grey percent" 
                                             style="width:{{ $answer['percent'] }}%">
                                             {{ $answer['percent'] }}%
                                         </div>
@@ -152,8 +152,7 @@
     </div>
 
 @endsection
-@section('css')
- 
+@section('cssbefore') 
 <link rel="stylesheet" href="{{ url('assets/site/css/w3.css') }}" />
 @endsection
 

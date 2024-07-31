@@ -509,6 +509,9 @@ align-content: flex-start;
   padding: 0px 4px; 
   border-radius: 4px;
 }
+.w3-border{
+  border: 1px solid #ccc !important;
+}
  
 
  
