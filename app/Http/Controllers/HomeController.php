@@ -187,20 +187,25 @@ class HomeController extends Controller
 
    public function getques($lang, $slug)
    {
-
       $sitedctrlr=new SiteDataController();   
       $client_id = auth()->guard('client')->user()->id;
 
       $transarr=$sitedctrlr->FillTransData($lang);
       $defultlang=$transarr['langs']->first();
-$answer_controller=new AnswerController();
+      $answer_controller=new AnswerController();
       $quiz=$sitedctrlr->getbycode($defultlang->id,['quiz']);
       $cat = Question::with('answers')->find($slug);
       $voted=$answer_controller->checkvoted( $client_id, $slug);
      // $cat= $sitedctrlr->getques($slug, $defultlang->id);
 
+   
 
-      return view('site.content.category',['catquis'=>$cat,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang 
+      //  $ques = Question::find($id);
+     $type = $cat->type;
+    // $answer_controller = new AnswerController();
+     $result = $answer_controller->resultwithimg($slug);
+
+      return view('site.content.category',[ 'results'=>$result,'type'=>$type , 'catquis'=>$cat,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang 
       ,'quiz'=>$quiz,'sitedataCtrlr'=>$sitedctrlr,'voted'=>$voted]);   
    }
 
@@ -208,10 +213,10 @@ $answer_controller=new AnswerController();
 
    public function get_vote_results($id)
    {
-      $ques=Question::find($id);
-      $type=$ques->type;
+      $ques = Question::find($id);
+      $type = $ques->type;
       $answer_controller = new AnswerController();
-      $result=  $answer_controller->resultwithimg($id);
+      $result = $answer_controller->resultwithimg($id);
       
       return view('site.content.result',['results'=>$result,'type'=>$type]);
    }

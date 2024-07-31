@@ -52,11 +52,6 @@ use Illuminate\Support\Facades\Artisan;
 |
 */
 
-Route::get('/aaa', function () {
-    return view('site.content.category');
-});
-
-
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 
