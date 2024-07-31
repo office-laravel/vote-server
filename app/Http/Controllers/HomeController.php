@@ -189,18 +189,19 @@ class HomeController extends Controller
    {
 
       $sitedctrlr=new SiteDataController();   
+      $client_id = auth()->guard('client')->user()->id;
 
       $transarr=$sitedctrlr->FillTransData($lang);
       $defultlang=$transarr['langs']->first();
-
+$answer_controller=new AnswerController();
       $quiz=$sitedctrlr->getbycode($defultlang->id,['quiz']);
       $cat = Question::with('answers')->find($slug);
-  
+      $voted=$answer_controller->checkvoted( $client_id, $slug);
      // $cat= $sitedctrlr->getques($slug, $defultlang->id);
 
 
       return view('site.content.category',['catquis'=>$cat,'transarr'=>$transarr,'lang'=>$lang,'defultlang'=>$defultlang 
-      ,'quiz'=>$quiz,'sitedataCtrlr'=>$sitedctrlr]);   
+      ,'quiz'=>$quiz,'sitedataCtrlr'=>$sitedctrlr,'voted'=>$voted]);   
    }
 
 

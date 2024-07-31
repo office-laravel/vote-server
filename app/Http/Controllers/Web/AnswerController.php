@@ -62,6 +62,20 @@ class AnswerController extends Controller
     {
         //
     }
+    public function checkvoted($client_id, $question_id)
+    {
+        $ansclient = AnswersClient::wherehas('answer', function ($query) use ($question_id) {
+            $query->where('question_id', $question_id);
+        })->where('client_id', $client_id)->first();
+        if ($ansclient) {          
+            //voted befor
+            return 1;
+        }
+        else{
+  //not voted
+return 0;
+        }
+    }
     public function addvote($slug)
     {
         //  $formdata = $request->all();        
@@ -73,11 +87,10 @@ class AnswerController extends Controller
         $ques = Question::find($ansmodel->question_id);
         //   $ansclient=AnswersClient::where('client_id',$client_id)->where('answer_id', $answer_id)->first(); 
         $ques_id = $ques->id;
-        $ansclient = AnswersClient::wherehas('answer', function ($query) use ($ques_id) {
-            $query->where('question_id', $ques_id);
-        })->where('client_id', $client_id)->first();
-        if (!$ansclient) {
 
+   
+        $voted=$this->checkvoted( $client_id, $ques_id);
+        if (!$voted) {
             //record the answer
             $newObj = new AnswersClient();
 
