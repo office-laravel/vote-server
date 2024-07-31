@@ -497,7 +497,7 @@ align-content: flex-start;
 
 
 
-#percent{
+.percent{
   background-color:#0866FF !important;
   color:#F0F2F5 !important;
   text-align: center; 
