@@ -1,7 +1,8 @@
                 <div class="row">
                     @if ($type == 'image')
                         @foreach ($results as $answer)
-                            <div class="col-12 col-md-4 " data-answer-id="{{ $answer['answer_id'] }}">
+
+                            <div class="col-12 col-md-4" data-answer-id="{{ $answer['answer_id'] }}">
                                 <div>
                                     <img src="{{ asset($answer['image_path']) }}" alt=""
                                         style="width: 200px; height: 200px;">
@@ -11,16 +12,16 @@
                                     <label class="col-12">{{ $answer['answer_content'] }}</label>
                                     
                                     <div class="row">
-                                        <div class="  col-10" style="padding-left: 4px;">
-                                            <div class="w3-border ">
-                                                <div class="w3-grey"
-                                                    style="background-color:#0866FF !important  ;color:#F0F2F5 !important;text-align: center; height:24px;width:{{ $answer['percent'] }}%">
+                                        <div class="col-10" style="padding-left: 4px;">
+                                            <div class="w3-border">
+                                                <div class="w3-grey" id="percent"
+                                                    style="width:{{ $answer['percent'] }}%">
                                                     {{ $answer['percent'] }}%
                                                 </div>
                                                    
                                             </div>
                                         </div>
-                                        <div style="background-color: #F0F2F5;padding: 0px 4px; border-radius: 4px;" >
+                                        <div class="anscount">
                                             {{ $answer['anscount'] }}
                                         </div>
                                     </div>
@@ -28,12 +29,31 @@
                                 </div>
                             </div>
                         @endforeach
+
                     @else
                         @foreach ($results as $answer)
-                            <div class="col-12">
+
+                            <div class="col-12" data-answer-id="{{ $answer['answer_id'] }}">
                                 <label>{{ $answer['answer_content'] }}</label>
-                                <label>العدد:{{ $answer['anscount'] }}</label>
-                                <label>النسبة:{{ $answer['percent'] }}</label>
+
+                                <div class="row">
+                                    <div class="col-10" style="padding-left: 4px;">
+                                        <div class="w3-border ">
+                                            <div class="w3-grey" id="percent"
+                                                style="width:{{ $answer['percent'] }}%">
+                                                {{ $answer['percent'] }}%
+                                            </div>
+                                               
+                                        </div>
+                                    </div>
+                                    <div class="anscount">
+                                        {{ $answer['anscount'] }}
+                                    </div>
+                                </div>
+
+                                {{-- <label>العدد:{{ $answer['anscount'] }}</label> --}}
+                                {{-- <label>النسبة:{{ $answer['percent'] }}</label> --}}
+                                
                                 {{-- <input name="answer" type="radio" value=""> --}}
                             </div>
                         @endforeach

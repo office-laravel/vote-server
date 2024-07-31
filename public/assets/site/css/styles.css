@@ -497,9 +497,18 @@ align-content: flex-start;
 
 
 
- 
+#percent{
+  background-color:#0866FF !important;
+  color:#F0F2F5 !important;
+  text-align: center; 
+  height:24px;
+}
 
-
+.anscount{
+  background-color: #F0F2F5;
+  padding: 0px 4px; 
+  border-radius: 4px;
+}
  
 
  

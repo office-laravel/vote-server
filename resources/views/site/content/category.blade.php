@@ -19,7 +19,8 @@
             <div class="row answer-main">
               @if($catquis->type == 'image')
               @foreach ($catquis->answers as $answer)
-                         <div class="col-12 col-md-4 " data-answer-id="{{ $answer->id }}">
+
+                <div class="col-12 col-md-4 " data-answer-id="{{ $answer->id }}">
                   <div>
                       <img src="{{ asset($answer->image_path) }}" alt="" style="width: 200px; height: 200px;">
                   </div>
@@ -28,26 +29,17 @@
                       <label>{{ $answer->content }}</label>
                       <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
                   </div>
-              </div>
+                </div>
               
-
-                  {{-- <div class="col-12 col-md-4">
-                    <div> <img src="{{ $answer->image_path }}" alt="" style="width: 200px; height: 200px;"> </div>
-                    <hr>
-                    <div>
-                      <label>{{ $answer->content }}</label>
-                      <input name="answer" type="radio" value="{{ $answer->id }}">
-                    </div>
-                  </div> --}}
-                    
               @endforeach
 
                 @else
                 @foreach ($catquis->answers as $answer)
-              <div class="col-12">
-                <label>{{ $answer->content }}</label>
-                <input name="answer" type="radio" value="">
-              </div>
+
+                  <div class="col-12" data-answer-id="{{ $answer->id }}">
+                    <label>{{ $answer->content }}</label>
+                    <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
+                  </div>
               @endforeach
 
               @endif
