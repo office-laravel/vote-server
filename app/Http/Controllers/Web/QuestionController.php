@@ -321,8 +321,17 @@ class QuestionController extends Controller
                     }
                 }
                 $res = Answer::where('question_id', $id)->whereNotIn('sequence',$seqarray)->delete();
+          
+          
             } else {
                 return response()->json("fewanswers");
+            }
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+                // $filename= $file->getClientOriginalName();
+
+                $this->storeImage($file,$id);
+                //  $this->storeImage( $file,2);
             }
             return response()->json("ok");
             }else{
