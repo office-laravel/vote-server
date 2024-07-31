@@ -16,7 +16,7 @@
                 <a  class="nav-link dropdown-toggle nav-link-pad" href="#" id="accountDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span> {{$sitedataCtrlr->gettrans($h_menu,'welcome')}} {{ Auth::guard('client')->user()->name }}</span></a>
                 <div class="dropdown-menu" aria-labelledby="accountDropdown">
                     <a class="dropdown-item" href="{{ route('client.account',$lang)  }}">{{$sitedataCtrlr->gettrans($h_menu,'profile')}}</a>
-                    <a class="dropdown-item" href="{{ url($lang,'myscore')}}">{{$sitedataCtrlr->gettrans($h_menu,'my-score')}}</a>
+            
 
                     <form method="POST" action="{{ route('logout.client') }}"  >
                         @csrf
@@ -24,9 +24,7 @@
                 </form> 
                   </div>
             </li>
-              <li class="nav-item  ">
-                <a  class="nav-link  nav-link-pad" href="#"> {{$sitedataCtrlr->gettrans($h_menu,'balance')}} <span id="u-balance">{{ Auth::guard('client')->user()->balance }}</span></a>
-              </li>
+          
             @else
             <li class="nav-item  ">
                 <a class="nav-link  nav-link-pad" href="{{ url($lang,'register') }}">{{$sitedataCtrlr->gettrans($h_menu,'new-account')}}</a>

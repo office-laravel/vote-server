@@ -41,10 +41,10 @@
                                         {{$sitedataCtrlr->gettrans($login,'no-account')}}
                                         <a href="{{ url($lang,'register') }}">{{$sitedataCtrlr->gettrans($login,'register')}}</a>
                                     </p>
-                                    أو
+                                    <p> <span> {{ $sitedataCtrlr->gettrans($login, 'or') }}</span></p>
                                     <p>
                                       <a href="/auth/google" style="text-decoration:none;">
-                                        التسجيل عن طريق البريد الإلكتروني
+                                        {{ $sitedataCtrlr->gettrans($login, 'login-by-gmail') }}  
                                     </a>
                                   </p>
                         </div>

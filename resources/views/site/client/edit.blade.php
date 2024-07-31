@@ -102,30 +102,7 @@
                 </div>
 
                   <!-- سحب رصيد   -->
-                  <div class="row main-content main-content-sec justify-content-center ">
-                    <div class="col-md-12">
-                        <div class="card login-card">
-                            <div class="card-body  bg-style ">
-                                <h3 class="card-title text-center">{{ $sitedataCtrlr->gettrans($profile, 'balance') }}</h3>
-                                <form action ="{{ url($lang,'pull') }}" method="POST" name="pull-form" style="display: none;"
-                                    id="pull-form" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="form-group">
-                                        <label for="points">{{ $sitedataCtrlr->gettrans($profile, 'points') }}</label>
-                                        <input type="text" class="form-control" id="points" name="points" value=""
-                                            placeholder="{{ $sitedataCtrlr->gettrans($profile, 'points-number') }}">
-                                        <div id="points-error" class="invalid-feedback"> .</div>
-                                        <div id="pointbalance"><span>{{ $sitedataCtrlr->gettrans($profile, 'your-balance') }}</span><span id="pointbalance-value" ></span><span></span></div>
-                                        <div id="coin"  ><span>{{ $sitedataCtrlr->gettrans($profile, 'value') }}</span><span id="coin-value" ></span><span></span></div>
-                                    </div> 
-                                    <button type="submit" id="btn-pull" class="btn btn-primary btn-block">{{ $sitedataCtrlr->gettrans($profile, 'pull') }}</button>
-                                </form>
-<p id="balance-msg" class="text-center" style="display: none;">{{ $sitedataCtrlr->gettrans($profile, 'not-enough') }}</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
+               
   <!--  حذف الحساب -->
   <div class="row main-content main-content-sec justify-content-center ">
     <div class="col-md-12">

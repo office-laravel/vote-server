@@ -72,9 +72,11 @@
                                         {{ $sitedataCtrlr->gettrans($register, 'already-account') }}
                                         <a href="{{ route('login.client',$lang) }}"
                                             style="text-decoration:none;">{{ $sitedataCtrlr->gettrans($register, 'login') }}</a>
-                                            أو
-                                            <a href="/auth/google" style="text-decoration:none;">
-                                                التسجيل عن طريق البريد الإلكتروني
+                                            <br>
+                                            <span> {{ $sitedataCtrlr->gettrans($register, 'or') }} </span>
+                                            <br>
+                                            <a href="/auth/google" style="text-decoration:none;">                                            
+                                                {{ $sitedataCtrlr->gettrans($register, 'login-by-gmail') }}                                                
                                             </a>    
                                     </p>
                                 </div>
