@@ -19,7 +19,7 @@
 
             @if ($voted == 1)
 
-              <div class="row">
+              <div class="row" style="direction: rtl; text-align: right;">
                 @if ($type == 'image')
                     @foreach ($results as $answer)
 
@@ -54,7 +54,7 @@
                 @else
                     @foreach ($results as $answer)
 
-                        <div class="col-12" data-answer-id="{{ $answer['answer_id'] }}">
+                        <div class="col-12" style="direction: rtl; text-align: right;" data-answer-id="{{ $answer['answer_id'] }}">
                             <label>{{ $answer['answer_content'] }}</label>
 
                             <div class="row">
@@ -83,7 +83,7 @@
 
             @else
 
-            <div class="row answer-main">
+            <div class="row answer-main" style="direction: rtl; text-align: right;">
               @if($catquis->type == 'image')
               @foreach ($catquis->answers as $answer)
 
@@ -93,8 +93,8 @@
                   </div>
                   <hr>
                   <div>
-                      <label>{{ $answer->content }}</label>
-                      <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
+                    <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
+                    <label>{{ $answer->content }}</label>
                   </div>
                 </div>
               
@@ -104,8 +104,8 @@
                 @foreach ($catquis->answers as $answer)
 
                   <div class="col-12" data-answer-id="{{ $answer->id }}">
-                    <label>{{ $answer->content }}</label>
                     <input name="answer" class="answer-option" type="radio" value="{{ $answer->id }}">
+                    <label>{{ $answer->content }}</label>
                   </div>
               @endforeach
 

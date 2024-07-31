@@ -1,4 +1,4 @@
-                <div class="row">
+                <div class="row" style="direction: rtl; text-align: right;">
                     @if ($type == 'image')
                         @foreach ($results as $answer)
 
